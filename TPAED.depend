@@ -1,0 +1,90 @@
+# depslib dependency file v1.0
+1747468992 source:c:\users\matia\desktop\c\tpaed\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<curl/curl.h>
+	"cJSON/cJSON.h"
+	"structs.h"
+	"requests.h"
+
+1747466213 source:c:\users\matia\desktop\c\tpaed\cjson\cjson.c
+	<string.h>
+	<stdio.h>
+	<math.h>
+	<stdlib.h>
+	<limits.h>
+	<ctype.h>
+	<float.h>
+	<locale.h>
+	"cJSON.h"
+
+1747466227 c:\users\matia\desktop\c\tpaed\cjson\cjson.h
+	<stddef.h>
+
+1747461144 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\curl.h
+	"curlver.h"
+	"system.h"
+	<stdio.h>
+	<limits.h>
+	<sys/param.h>
+	<sys/types.h>
+	<time.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<sys/select.h>
+	<sys/socket.h>
+	<sys/time.h>
+	"easy.h"
+	"multi.h"
+	"urlapi.h"
+	"options.h"
+	"header.h"
+	"websockets.h"
+	"mprintf.h"
+	"typecheck-gcc.h"
+
+1747461144 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\curlver.h
+
+1747461145 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\system.h
+	<ConditionalMacros.h>
+	<inttypes.h>
+	<inttypes.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<sys/poll.h>
+
+1747461144 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\easy.h
+
+1747461144 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\multi.h
+	"curl.h"
+
+1747461145 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\urlapi.h
+	"curl.h"
+
+1747461144 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\options.h
+
+1747461144 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\header.h
+
+1747461145 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\websockets.h
+
+1747461144 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\mprintf.h
+	<stdarg.h>
+	<stdio.h>
+	"curl.h"
+
+1747461145 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\typecheck-gcc.h
+
+1747469008 c:\users\matia\desktop\c\tpaed\requests.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<curl/curl.h>
+	"structs.h"
+
+1747468847 source:c:\users\matia\desktop\c\tpaed\requests.c
+	"requests.h"
+	<curl/curl.h>
+
+1747468980 c:\users\matia\desktop\c\tpaed\structs.h
+
