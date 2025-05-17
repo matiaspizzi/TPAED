@@ -41,6 +41,11 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="cJSON/cJSON.h" />
+		<Unit filename="config.h" />
+		<Unit filename="helpers.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="helpers.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
