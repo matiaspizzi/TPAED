@@ -1,5 +1,4 @@
 #include "requests.h"
-#include <curl/curl.h>
 
 size_t get_players_callback(void *ptr, size_t size, size_t nmemb, string *s) {
     size_t new_len = s->len + size * nmemb;
@@ -37,6 +36,7 @@ int get_players(CURL *curl, string *response,  const char *url){
 
     if (res != CURLE_OK) {
         fprintf(stderr, "Fallo en curl_easy_perform(): %s\n", curl_easy_strerror(res));
+        getchar();
     } else {
         printf("Respuesta de la API:\n%s\n", response->ptr);
     }

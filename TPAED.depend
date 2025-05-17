@@ -1,12 +1,14 @@
 # depslib dependency file v1.0
-1747468992 source:c:\users\matia\desktop\c\tpaed\main.c
+1747471778 source:c:\users\matia\desktop\c\tpaed\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
-	<curl/curl.h>
 	"cJSON/cJSON.h"
+	<curl/curl.h>
+	"helpers.h"
 	"structs.h"
 	"requests.h"
+	"config.h"
 
 1747466213 source:c:\users\matia\desktop\c\tpaed\cjson\cjson.c
 	<string.h>
@@ -75,16 +77,25 @@
 
 1747461145 c:\users\matia\desktop\c\tpaed\libcurl\include\curl\typecheck-gcc.h
 
-1747469008 c:\users\matia\desktop\c\tpaed\requests.h
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
+1747471526 c:\users\matia\desktop\c\tpaed\requests.h
 	<curl/curl.h>
 	"structs.h"
 
-1747468847 source:c:\users\matia\desktop\c\tpaed\requests.c
+1747471778 source:c:\users\matia\desktop\c\tpaed\requests.c
 	"requests.h"
-	<curl/curl.h>
 
-1747468980 c:\users\matia\desktop\c\tpaed\structs.h
+1747471526 c:\users\matia\desktop\c\tpaed\structs.h
+	<stdlib.h>
+
+1747471182 source:c:\users\matia\desktop\c\tpaed\helpers.c
+	"helpers.h"
+
+1747471526 c:\users\matia\desktop\c\tpaed\helpers.h
+	<stdio.h>
+	<string.h>
+	"cJSON/cJSON.h"
+	"config.h"
+	"structs.h"
+
+1747471819 c:\users\matia\desktop\c\tpaed\config.h
 

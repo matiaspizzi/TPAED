@@ -1,6 +1,8 @@
 #ifndef STRUCTS_H_INCLUDED
 #define STRUCTS_H_INCLUDED
 
+#include <stdlib.h>
+
 typedef struct {
     char *ptr;
     size_t len;
@@ -12,4 +14,4 @@ typedef struct {
     char lastGame[32];
 } Player;
 
-#endif // STRUCTS_H_INCLUDED
+#endif
