@@ -1,0 +1,7 @@
+# Ignorar archivos bin y obj
+bin/
+obj/
+*.o
+*.exe
+*.depend
+*.layout
