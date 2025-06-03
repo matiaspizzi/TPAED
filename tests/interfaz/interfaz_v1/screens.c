@@ -45,3 +45,7 @@ int draw_menu(Vector2 mouse)
     return MENU;
 }
 
+int draw_input_player(Vector2 mouse)
+{
+
+}

@@ -4,11 +4,15 @@
 #include "raylib.h"
 #include "screens.h"
 
+#define MAX_BUFF_SIZE 50
+
+
 int main(void)
 {
     InitWindow(screenWidth, screenHeight, "TaCTi");
 
     screens currentScreen = MENU;
+    char buff_txt[MAX_BUFF_SIZE];
 
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
@@ -24,6 +28,7 @@ int main(void)
             }
             case PLAYERS:
             {
+                currentScreen = draw_input_player(mouse);
                 break;
             }
             case EXIT:
