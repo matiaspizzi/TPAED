@@ -14,5 +14,3 @@
 ## Setup
 
 Documentación tecnica: https://docs.google.com/document/d/1xyHfigiWgIt0I04SpsPdMmgTNeucW5XP_41WoVIiUOY/edit?usp=sharing
-
-asdasd
