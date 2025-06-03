@@ -1,19 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "libs/screens.h"
+
 #include "parameters.h"
+
+#include "libs/screens.h"
 #include "libs/TDA_Lista.h"
+#include "libs/data.h"
+#include "libs/cola.h"
 
 
 int main()
 {
     InitWindow(screenWidth, screenHeight, "TaCTi");
     SetTargetFPS(30);
-    //tPlayer player;           //  Estructura del jugador
-    tLista inputPlayers;        //  Lista para almacenar los jugadores que se ingresan.
-    crearLista(&inputPlayers);
-
     screens currentScreen = MENU;
+    tLista inputPlayers;
+    crearLista(&inputPlayers);
+    tCola gameTurn;
+    crearCola(&gameTurn);
+    char buffer[MAX_BUFF_SIZE];
+
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
         BeginDrawing();
@@ -28,12 +34,12 @@ int main()
             }
             case PLAYERS:
             {
-                currentScreen = draw_input_player(mouse, &inputPlayers);
+                currentScreen = draw_input_player(mouse, &inputPlayers, &gameTurn);
                 break;
             }
             case PLAYER_READY:
             {
-                currentScreen = draw_player_ready(mouse, "&player_name");
+                currentScreen = draw_player_ready(mouse);
                 break;
             }
             case BOARD:
@@ -54,5 +60,13 @@ int main()
         EndDrawing();
     }
     CloseWindow();
+
+    printf("Jugadores ingresados: \n");
+    recorrerLista(&inputPlayers,MAX_BUFF_SIZE,printString);
+    /*while(!colaVacia(&gameTurn))
+    {
+        sacarDeCola(&gameTurn, buffer, MAX_BUFF_SIZE);
+        printf("%s\n", buffer);
+    }*/
     return 0;
 }

@@ -5,6 +5,7 @@
 #include "data.h"
 #include "TDA_Lista.h"
 #include "board.h"
+#include <string.h>
 
 #define CELL_SIZE 120
 
@@ -74,11 +75,13 @@ int draw_menu(Vector2 mouse)
     return MENU;
 }
 
-int draw_input_player(Vector2 mouse, tLista *players)
+int draw_input_player(Vector2 mouse, tLista *players, tCola *gameTurn)
 {
     char key;
     static int showError = 0;
     static float errorTimer;
+    char name[MAX_BUFF_SIZE];
+
 
     /// Visuales   -----------------------------------------------------------------------------------------
     DrawText("Ingrese nombre", screenWidth/2 - MeasureText("Ingrese nombre", 30)/2, 120, 30, COLOR_TEXT);
@@ -142,7 +145,7 @@ int draw_input_player(Vector2 mouse, tLista *players)
     {
         if (keyCount > 0)
         {
-            ponerAlFinal(players,input,keyCount);  // Tu función para agregar jugador
+            ponerAlFinal(players, input, keyCount);
             cantPlayers++;
             input[0] = '\0';
             keyCount = 0;
@@ -154,12 +157,18 @@ int draw_input_player(Vector2 mouse, tLista *players)
     {
         if (keyCount > 0)
         {
-            ponerAlFinal(players, input, keyCount);
             cantPlayers++;
             input[0] = '\0';
             keyCount = 0;
-        }
 
+            ponerAlFinal(players, input, keyCount);
+            desordenarLista(players);
+            while(!listaVacia(players))
+            {
+                sacarAlFinal(players,&name,MAX_BUFF_SIZE);
+                ponerEnCola(gameTurn,&name,strlen(name));
+            }
+        }
         if (cantPlayers >= 1)
             return PLAYER_READY;
         else
@@ -266,13 +275,13 @@ int draw_ranking(Vector2 mouse)
     return RANKING;
 }
 
-int draw_player_ready(Vector2 mouse, const char* playerName)
+int draw_player_ready(Vector2 mouse)
 {
 
-    char buffer[64];
-    sprintf(buffer, "%s estas listo?", playerName);
+    //char buffer[64];
+    //sprintf(buffer, "%s estas listo?", playerName);
 
-    DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
+    //DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
 
     DrawRectangleRec(btnStart, COLOR_BTN);
     DrawText("COMENZAR",

@@ -43,6 +43,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libs/board.h" />
+		<Unit filename="libs/cola.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/cola.h" />
 		<Unit filename="libs/data.c">
 			<Option compilerVar="CC" />
 		</Unit>
