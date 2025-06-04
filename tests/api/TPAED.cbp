@@ -37,10 +37,7 @@
 			<Add option="-Wall" />
 			<Add directory="dependencias/curl-8.14.0_1-win64-mingw/include" />
 		</Compiler>
-		<Linker>
-			<Add library="curl" />
-			<Add directory="dependencias/curl-8.14.0_1-win64-mingw/lib" />
-		</Linker>
+		<!-- Removed misplaced <Linker> block -->
 		<Unit filename="cJSON/cJSON.c">
 			<Option compilerVar="CC" />
 		</Unit>
