@@ -35,11 +35,11 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add directory="C:/libs/curl-8.14.0_1-win64-mingw/include" />
+			<Add directory="dependencias/curl-8.14.0_1-win64-mingw/include" />
 		</Compiler>
 		<Linker>
 			<Add library="curl" />
-			<Add directory="C:/libs/curl-8.14.0_1-win64-mingw/lib" />
+			<Add directory="dependencias/curl-8.14.0_1-win64-mingw/lib" />
 		</Linker>
 		<Unit filename="cJSON/cJSON.c">
 			<Option compilerVar="CC" />
