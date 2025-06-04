@@ -13,10 +13,13 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="dependencies/curl-8.14.0_1-win64-mingw/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-lraylib -lopengl32 -lgdi32 -lwinmm" />
 					<Add library="C:/raylib/w64devkit/x86_64-w64-mingw32/lib/libraylib.a" />
+					<Add library="curl" />
+					<Add directory="dependencies/curl-8.14.0_1-win64-mingw/lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -43,10 +46,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libs/board.h" />
+		<Unit filename="libs/cJSON.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/cJSON.h" />
 		<Unit filename="libs/data.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libs/data.h" />
+		<Unit filename="libs/requests.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/requests.h" />
 		<Unit filename="libs/screens.c">
 			<Option compilerVar="CC" />
 		</Unit>
