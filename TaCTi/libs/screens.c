@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "requests.h"
 #include "screens.h"
 #include "raylib.h"
 #include "data.h"
@@ -245,9 +246,11 @@ int draw_ranking(Vector2 mouse)
 
     // Se trae desde la API el ranking, en caso de no haber conexión, se trae el ranking local
 
+
+
     for (i = 0; i < 10; i++)
     {
-        sprintf(buffer, "%d - ", i+1);
+        sprintf(buffer, "%d - ", i+1 );
         // Dibujamos cada entrada un poco más abajo para que no se encimen
         DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
     }
