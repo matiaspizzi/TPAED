@@ -16,7 +16,7 @@
 					<Add directory="dependencias/curl-8.14.0_1-win64-mingw/include" />
 				</Compiler>
 				<Linker>
-					<Add library="curl" />
+					<Add option="-lcurl" />
 					<Add directory="dependencias/curl-8.14.0_1-win64-mingw/lib" />
 				</Linker>
 			</Target>
