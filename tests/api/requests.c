@@ -1,4 +1,5 @@
 #include "requests.h"
+#define SSL_CERT_URL "dependencias/curl-8.14.0_1-win64-mingw/bin/curl-ca-bundle.crt"
 
 size_t get_players_callback(void *ptr, size_t size, size_t nmemb, string *s) {
     size_t new_len = s->len + size * nmemb;
@@ -29,9 +30,9 @@ int get_players(CURL *curl, string *response,  const char *url){
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     // SSL CERT
-    // curl_easy_setopt(curl, CURLOPT_CAINFO, "cacert.pem");
+    curl_easy_setopt(curl, CURLOPT_CAINFO, SSL_CERT_URL);
     // NO SSL CERT
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+    // curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
     // Realiza la petición
     res = curl_easy_perform(curl);
