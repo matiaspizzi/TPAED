@@ -13,12 +13,11 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-					<Add directory="libcurl/include" />
+					<Add directory="dependencias/curl-8.14.0_1-win64-mingw/include" />
 				</Compiler>
 				<Linker>
-					<Add option="-lcurl" />
-					<Add library="libcurl/lib/libcurl.a" />
-					<Add directory="libcurl/lib" />
+					<Add library="curl" />
+					<Add directory="dependencias/curl-8.14.0_1-win64-mingw/lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -36,7 +35,12 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="C:/libs/curl-8.14.0_1-win64-mingw/include" />
 		</Compiler>
+		<Linker>
+			<Add library="curl" />
+			<Add directory="C:/libs/curl-8.14.0_1-win64-mingw/lib" />
+		</Linker>
 		<Unit filename="cJSON/cJSON.c">
 			<Option compilerVar="CC" />
 		</Unit>

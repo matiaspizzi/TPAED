@@ -9,7 +9,6 @@
 #include "structs.h"
 #include "requests.h"
 #include "config.h"
-
 void init_string(string *s) {
     s->len = 0;
     s->ptr = malloc(s->len + 1);

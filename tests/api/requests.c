@@ -29,7 +29,9 @@ int get_players(CURL *curl, string *response,  const char *url){
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     // SSL CERT
-    curl_easy_setopt(curl, CURLOPT_CAINFO, "cacert.pem");
+    // curl_easy_setopt(curl, CURLOPT_CAINFO, "cacert.pem");
+    // NO SSL CERT
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
     // Realiza la petición
     res = curl_easy_perform(curl);
