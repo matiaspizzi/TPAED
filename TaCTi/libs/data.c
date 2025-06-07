@@ -3,6 +3,7 @@
 #include "data.h"
 #include "TDA_Lista.h"
 
+tInput input = {{0},0,0};
 
 void printString(const void *data)
 {

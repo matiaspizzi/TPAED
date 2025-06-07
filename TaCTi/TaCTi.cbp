@@ -39,10 +39,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libs/TDA_Lista.h" />
-		<Unit filename="libs/board.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="libs/board.h" />
 		<Unit filename="libs/cola.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -51,6 +47,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libs/data.h" />
+		<Unit filename="libs/interactions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/interactions.h" />
 		<Unit filename="libs/screens.c">
 			<Option compilerVar="CC" />
 		</Unit>

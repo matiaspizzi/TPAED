@@ -4,6 +4,8 @@
 #include "parameters.h"
 
 #include "libs/screens.h"
+#include "libs/interactions.h"
+
 #include "libs/TDA_Lista.h"
 #include "libs/data.h"
 #include "libs/cola.h"
@@ -13,43 +15,46 @@ int main()
 {
     InitWindow(screenWidth, screenHeight, "TaCTi");
     SetTargetFPS(30);
+
     screens currentScreen = MENU;
+
     tLista inputPlayers;
     crearLista(&inputPlayers);
     tCola gameTurn;
     crearCola(&gameTurn);
-    char buffer[MAX_BUFF_SIZE];
 
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
         BeginDrawing();
         ClearBackground(COLOR_BG);
-        Vector2 mouse = GetMousePosition();
         switch(currentScreen)
         {
             case MENU:
             {
-                currentScreen = draw_menu(mouse);
+                draw_menu();
+                currentScreen = update_menu();
                 break;
             }
             case PLAYERS:
             {
-                currentScreen = draw_input_player(mouse, &inputPlayers, &gameTurn);
+                draw_input_player();
+                currentScreen = update_input_player();
                 break;
             }
             case PLAYER_READY:
             {
-                currentScreen = draw_player_ready(mouse);
+                draw_player_ready();
+
                 break;
             }
             case BOARD:
             {
-                currentScreen = draw_board(mouse);
+                draw_board();
                 break;
             }
             case RANKING:
             {
-                currentScreen = draw_ranking(mouse);
+                draw_ranking();
                 break;
             }
             case EXIT:

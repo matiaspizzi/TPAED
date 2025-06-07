@@ -10,6 +10,8 @@
 #include "TDA_Lista.h"
 #include "cola.h"
 
+#define     MAX_PLAYER_NAME     30
+
 #define     COLOR_TEXT      WHITE
 #define     COLOR_BG        DARKGREEN
 #define     COLOR_BTN       DARKGRAY
@@ -21,22 +23,32 @@
 // Listamos las diferentes pantallas que pueden aparecer.
 typedef enum
 {
-    MENU = 0xA1,
-    PLAYERS = 0xA2,
-    BOARD = 0xA3,
-    RANKING = 0xA4,
-    PLAYER_READY = 0xA5,
-    EXIT = 0xE1
+    MENU,
+    PLAYERS,
+    BOARD,
+    RANKING,
+    PLAYER_READY,
+    EXIT
 } screens;
 
 
 extern const int screenWidth;
 extern const int screenHeight;
 
-int draw_menu               (Vector2 mouse);
-int draw_input_player       (Vector2 mouse, tLista *players, tCola *gameTurn);
-int draw_board              (Vector2 mouse);
-int draw_ranking            (Vector2 mouse);
-int draw_player_ready       (Vector2 mouse);
+void    draw_menu               (void);
+void    draw_input_player       (void);
+void    draw_board              (void);
+void    draw_ranking            (void);
+void    draw_player_ready       (void);
+
+extern Rectangle btnPlay;
+extern Rectangle btnRanking;
+extern Rectangle btnExit;
+extern Rectangle btnNewPlayer;
+extern Rectangle btnStart;
+extern Rectangle btnBack;
+extern Rectangle btnSurrender;
+extern Rectangle txtBox;
+extern Rectangle grid[3][3];
 
 #endif // SCREENS_H_INCLUDED
