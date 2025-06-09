@@ -137,7 +137,7 @@ int draw_input_player(Vector2 mouse, tLista *players)
     {
         if (keyCount > 0)
         {
-            ponerAlFinal(players,input,keyCount);  // Tu función para agregar jugador
+            ponerAlFinal(players,input,keyCount);  // Tu funciÃ³n para agregar jugador
             cantPlayers++;
             input[0] = '\0';
             keyCount = 0;
@@ -216,7 +216,7 @@ int draw_board(Vector2 mouse)
                     cell.y + (CELL_SIZE - textHeight) / 2,
                     fontSize, COLOR_O);
 
-            // Click en celda vacía
+            // Click en celda vacÃ­a
             if (CheckCollisionPointRec(mouse, cell) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
                 if (board[row][col] == 0)
@@ -232,15 +232,15 @@ int draw_board(Vector2 mouse)
 }
 
 int draw_ranking(Vector2 mouse) {
-    int i=0;
+    int i = 0;
     char buffer[64];
     double current_time = GetTime();
 
     DrawText("Ranking", screenWidth/2 - MeasureText("Ranking", 30)/2, 50, 30, COLOR_TEXT);
 
-    // Solo hace la petición si:
-    // - No hay datos en caché O
-    // - Pasó el intervalo de refresco
+    // Solo hace la peticiÃ³n si:
+    // - No hay datos en cachÃ© O
+    // - PasÃ³ el intervalo de refresco
     if (cached_players == NULL || (current_time - last_fetch_time) > REFRESH_INTERVAL) {
         if (cached_players != NULL) {
             free(cached_players);
