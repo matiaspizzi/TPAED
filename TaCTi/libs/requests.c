@@ -115,8 +115,10 @@ void parse_json_players(const char* json_string, tPlayer* players, int* cant) {
         if (cJSON_IsNumber(points))
             players[i].points = points->valueint;
 
-        if (cJSON_IsString(date) && (date->valuestring != NULL))
-            strncpy(players[i].lastGame, date->valuestring, sizeof(players[i].lastGame));
+        if (cJSON_IsString(date) && (date->valuestring != NULL)) {
+            strncpy(players[i].lastGame, date->valuestring, sizeof(players[i].lastGame) - 1);
+            players[i].lastGame[sizeof(players[i].lastGame) - 1] = '\0';
+        }
     }
 
     cJSON_Delete(json_array);
