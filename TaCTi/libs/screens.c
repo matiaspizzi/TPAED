@@ -1,13 +1,4 @@
-#include <stdio.h>
-
 #include "screens.h"
-#include "raylib.h"
-#include "data.h"
-#include "TDA_Lista.h"
-#include "board.h"
-
-#define CELL_SIZE 120
-
 
 const int screenWidth = 800;
 const int screenHeight = 600;
@@ -30,6 +21,10 @@ int keyCount = 0;
 int cantPlayers = 0;
 int currentPlayer = 1; // 1 = X, 2 = O
 
+static tPlayer *cached_players = NULL;
+static int cached_players_count = 0;
+static double last_fetch_time = 0;
+const double REFRESH_INTERVAL = 30.0;
 
 
 int draw_menu(Vector2 mouse)
@@ -236,34 +231,59 @@ int draw_board(Vector2 mouse)
     return BOARD;
 }
 
-int draw_ranking(Vector2 mouse)
-{
-    int i;
-    char buffer[16]; // Más espacio para evitar desbordamiento
+int draw_ranking(Vector2 mouse) {
+    int i=0;
+    char buffer[64];
+    double current_time = GetTime();
 
-    DrawText("Ranking", screenWidth / 2 - MeasureText("Ranking", 30) / 2, 50, 30, COLOR_TEXT);
+    DrawText("Ranking", screenWidth/2 - MeasureText("Ranking", 30)/2, 50, 30, COLOR_TEXT);
 
-    // Se trae desde la API el ranking, en caso de no haber conexión, se trae el ranking local
+    // Solo hace la petición si:
+    // - No hay datos en caché O
+    // - Pasó el intervalo de refresco
+    if (cached_players == NULL || (current_time - last_fetch_time) > REFRESH_INTERVAL) {
+        if (cached_players != NULL) {
+            free(cached_players);
+            cached_players = NULL;
+        }
 
-    for (i = 0; i < 10; i++)
-    {
-        sprintf(buffer, "%d - ", i+1);
-        // Dibujamos cada entrada un poco más abajo para que no se encimen
-        DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
+        cached_players_count = get_players(&cached_players);
+        last_fetch_time = current_time;
     }
+
+
+    if (cached_players != NULL && cached_players_count > 0) {
+        while(i<cached_players_count && i<10){
+            snprintf(buffer, sizeof(buffer), "%d - %s: %i points",
+                   i+1, cached_players[i].name, cached_players[i].points);
+
+            if (100 + i*35 < screenHeight) {
+                DrawText(buffer, 100, 100 + i*35, 30, COLOR_TEXT);
+            }
+            i++;
+        }
+    }
+
 
     DrawRectangleRec(btnBack, COLOR_BTN);
     DrawText("ATRAS",
-        btnBack.x + (btnBack.width - MeasureText("ATRAS", 20)) / 2,
-        btnBack.y + (btnBack.height - 20) / 2,
+        btnBack.x + (btnBack.width - MeasureText("ATRAS", 20))/2,
+        btnBack.y + (btnBack.height - 20)/2,
         20, COLOR_TEXT);
 
-    if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-    {
+    if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         return MENU;
     }
 
     return RANKING;
+}
+
+void clear_ranking_cache() {
+    if (cached_players != NULL) {
+        free(cached_players);
+        cached_players = NULL;
+    }
+    cached_players_count = 0;
 }
 
 int draw_player_ready(Vector2 mouse, const char* playerName)
