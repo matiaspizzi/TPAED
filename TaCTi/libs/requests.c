@@ -108,9 +108,10 @@ void parse_json_players(const char* json_string, tPlayer* players, int* cant) {
         cJSON *points = cJSON_GetObjectItemCaseSensitive(jugador_json, "puntaje");
         cJSON *date = cJSON_GetObjectItemCaseSensitive(jugador_json, "ultimaPartidaJugada");
 
-        if (cJSON_IsString(name) && (name->valuestring != NULL))
-            strncpy(players[i].name, name->valuestring, sizeof(players[i].name));
-
+        if (cJSON_IsString(name) && (name->valuestring != NULL)) {
+            strncpy(players[i].name, name->valuestring, sizeof(players[i].name) - 1);
+            players[i].name[sizeof(players[i].name) - 1] = '\0';
+        }
         if (cJSON_IsNumber(points))
             players[i].points = points->valueint;
 
