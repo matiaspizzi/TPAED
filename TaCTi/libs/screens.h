@@ -8,7 +8,11 @@
 #include "raylib.h"
 #include "../parameters.h"
 #include "TDA_Lista.h"
-
+#include "data.h"
+#include "raylib.h"
+#include "board.h"
+#include "requests.h"
+#include <stdio.h>
 
 #define     COLOR_TEXT      WHITE
 #define     COLOR_BG        DARKGREEN
@@ -16,6 +20,8 @@
 #define     COLOR_BOARD     DARKGRAY
 #define     COLOR_X         RED
 #define     COLOR_O         BLUE
+
+#define CELL_SIZE 120
 // Listamos las diferentes pantallas que pueden aparecer.
 typedef enum
 {
@@ -35,6 +41,7 @@ int draw_menu(Vector2 mouse);
 int draw_input_player(Vector2 mouse, tLista *players);
 int draw_board(Vector2 mouse);
 int draw_ranking(Vector2 mouse);
+void clear_ranking_cache();
 int draw_player_ready(Vector2 mouse, const char* playerName);
 
 #endif // SCREENS_H_INCLUDED

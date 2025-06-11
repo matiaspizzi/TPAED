@@ -13,6 +13,7 @@ typedef struct
 {
     char name[MAX_PLAYER_NAME];
     int points;
+    char lastGame[32];
 }tPlayer;
 
 

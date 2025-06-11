@@ -4,7 +4,6 @@
 #include "parameters.h"
 #include "libs/TDA_Lista.h"
 
-
 int main()
 {
     InitWindow(screenWidth, screenHeight, "TaCTi");
@@ -14,8 +13,16 @@ int main()
     crearLista(&inputPlayers);
 
     screens currentScreen = MENU;
+    screens prevScreen = MENU;
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
+
+        if (prevScreen != currentScreen && currentScreen == RANKING) {
+            clear_ranking_cache();
+        }
+
+        prevScreen = currentScreen;
+
         BeginDrawing();
         ClearBackground(COLOR_BG);
         Vector2 mouse = GetMousePosition();
