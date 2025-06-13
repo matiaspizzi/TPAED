@@ -1,19 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "libs/screens.h"
+
 #include "parameters.h"
+
+#include "libs/screens.h"
+#include "libs/interactions.h"
+
+#include "libs/data.h"
+
+
 #include "libs/TDA_Lista.h"
+#include "libs/cola.h"
+
 
 int main()
 {
     InitWindow(screenWidth, screenHeight, "TaCTi");
     SetTargetFPS(30);
-    //tPlayer player;           //  Estructura del jugador
-    tLista inputPlayers;        //  Lista para almacenar los jugadores que se ingresan.
-    crearLista(&inputPlayers);
 
     screens currentScreen = MENU;
     screens prevScreen = MENU;
+
+    //tPlayer player;
+    tInput input;
+    clear_input(&input);
+
+    tLista players_list;
+    crearLista(&players_list);
+
+    tCola player_queue;
+    crearCola(&player_queue);
+
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
 
@@ -25,32 +42,44 @@ int main()
 
         BeginDrawing();
         ClearBackground(COLOR_BG);
-        Vector2 mouse = GetMousePosition();
         switch(currentScreen)
         {
             case MENU:
             {
-                currentScreen = draw_menu(mouse);
+                //  Se despliega el menu.
+                draw_menu();
+                currentScreen = update_menu();
                 break;
             }
-            case PLAYERS:
+            case ENTER_PLAYERS:
             {
-                currentScreen = draw_input_player(mouse, &inputPlayers);
+                //  Se reciben los nombres de jugadores y enlistan.
+                draw_enter_players(&input);
+                currentScreen = update_enter_players(&input, &players_list);
                 break;
             }
-            case PLAYER_READY:
+            case ROUND:
             {
-                currentScreen = draw_player_ready(mouse, "&player_name");
+                //  Se otorgan los turnos para cada jugador.
+                draw_round(&players_list);
+                //currentScreen = update_round();
+                break;
+            }
+            case PLAYERS_READY:
+            {
+                draw_player_ready();
+
                 break;
             }
             case BOARD:
             {
-                currentScreen = draw_board(mouse);
+                draw_board();
                 break;
             }
             case RANKING:
             {
-                currentScreen = draw_ranking(mouse);
+                draw_ranking();
+                currentScreen = update_ranking();
                 break;
             }
             case EXIT:
@@ -61,5 +90,13 @@ int main()
         EndDrawing();
     }
     CloseWindow();
+
+    printf("Jugadores ingresados: \n");
+    recorrerLista(&players_list,MAX_BUFF_SIZE,printString);
+    /*while(!colaVacia(&gameTurn))
+    {
+        sacarDeCola(&gameTurn, buffer, MAX_BUFF_SIZE);
+        printf("%s\n", buffer);
+    }*/
     return 0;
 }

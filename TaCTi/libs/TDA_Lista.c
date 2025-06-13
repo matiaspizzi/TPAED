@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdlib.h> // para rand() y srand()
+#include <time.h>   // para time()
+
 
 #include "TDA_Lista.h"
 
@@ -158,6 +161,21 @@ int sacarAlFinal(tLista *l, void *dato, unsigned tamDato)
 }
 
 
+void recorrerLista(const tLista *p,
+                   unsigned cantBytes,
+                   void (*mostrar)(const void *))
+{
+    void *temp;
+    int min;
 
-
+    while(*p)
+    {
+        min = MIN(cantBytes, (*p)->tamInfo);
+        temp = malloc(min);
+        memcpy(temp, (*p)->info, min);
+        mostrar(temp);
+        free(temp);
+        p = &(*p)->sig;
+    }
+}
 

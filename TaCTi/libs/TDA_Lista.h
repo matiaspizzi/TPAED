@@ -27,4 +27,11 @@ int     ponerAlFinal                (tLista *l, void *dato, unsigned tamDato);
 int     verAlFinal                  (tLista *l, void *dato, unsigned tamDato);
 int     sacarAlFinal                (tLista *l, void *dato, unsigned tamDato);
 
+
+void recorrerLista(const tLista *p,
+                   unsigned cantBytes,
+                   void (*mostrar)(const void *));
+
+void desordenarLista(tLista *p);
+
 #endif // TDA_LISTA_H_INCLUDED
