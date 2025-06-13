@@ -19,6 +19,7 @@ int main()
     SetTargetFPS(30);
 
     screens currentScreen = MENU;
+    screens prevScreen = MENU;
 
     //tPlayer player;
     tInput input;
@@ -32,6 +33,13 @@ int main()
 
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
+
+        if (prevScreen != currentScreen && currentScreen == RANKING) {
+            clear_ranking_cache();
+        }
+
+        prevScreen = currentScreen;
+
         BeginDrawing();
         ClearBackground(COLOR_BG);
         switch(currentScreen)

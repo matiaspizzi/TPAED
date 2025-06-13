@@ -1,5 +1,5 @@
 /**
-    Esta librería contiene todo lo relacionado a la interfaz gráfica.
+    Esta librerï¿½a contiene todo lo relacionado a la interfaz grï¿½fica.
 **/
 
 #ifndef SCREENS_H_INCLUDED

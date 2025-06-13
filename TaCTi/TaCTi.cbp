@@ -43,6 +43,11 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libs/cola.h" />
+		<Unit filename="libs/board.h" />
+		<Unit filename="libs/cJSON.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/cJSON.h" />
 		<Unit filename="libs/data.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -51,6 +56,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libs/interactions.h" />
+		<Unit filename="libs/requests.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/requests.h" />
 		<Unit filename="libs/screens.c">
 			<Option compilerVar="CC" />
 		</Unit>

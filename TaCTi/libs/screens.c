@@ -26,6 +26,13 @@ Rectangle grid[3][3];
 
 
 
+static tPlayer *cached_players = NULL;
+static int cached_players_count = 0;
+static double last_fetch_time = 0;
+const double REFRESH_INTERVAL = 30.0;
+
+
+int draw_menu(Vector2 mouse)
 void draw_menu(void)
 {
     DrawText("Menu Principal", screenWidth/2 - MeasureText("Menu Principal", 30)/2, 120, 30, COLOR_TEXT);
@@ -116,23 +123,41 @@ void draw_board(void)
 void draw_ranking()
 {
     int i;
-    char buffer[16]; // Más espacio para evitar desbordamiento
+    char buffer[16]; // Mï¿½s espacio para evitar desbordamiento
 
-    DrawText("Ranking", screenWidth / 2 - MeasureText("Ranking", 30) / 2, 50, 30, COLOR_TEXT);
+    DrawText("Ranking", screenWidth/2 - MeasureText("Ranking", 30)/2, 50, 30, COLOR_TEXT);
 
-    // Se trae desde la API el ranking, en caso de no haber conexión, se trae el ranking local
+    // Solo hace la peticiÃ³n si:
+    // - No hay datos en cachÃ© O
+    // - PasÃ³ el intervalo de refresco
+    if (cached_players == NULL || (current_time - last_fetch_time) > REFRESH_INTERVAL) {
+        if (cached_players != NULL) {
+            free(cached_players);
+            cached_players = NULL;
+        }
 
-    for (i = 0; i < 10; i++)
-    {
-        sprintf(buffer, "%d - ", i+1);
-        // Dibujamos cada entrada un poco más abajo para que no se encimen
-        DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
+        cached_players_count = get_players(&cached_players);
+        last_fetch_time = current_time;
     }
+
+
+    if (cached_players != NULL && cached_players_count > 0) {
+        while(i<cached_players_count && i<10){
+            snprintf(buffer, sizeof(buffer), "%d - %s: %i points",
+                   i+1, cached_players[i].name, cached_players[i].points);
+
+            if (100 + i*35 < screenHeight) {
+                DrawText(buffer, 100, 100 + i*35, 30, COLOR_TEXT);
+            }
+            i++;
+        }
+    }
+
 
     DrawRectangleRec(btnBack, COLOR_BTN);
     DrawText("ATRAS",
-        btnBack.x + (btnBack.width - MeasureText("ATRAS", 20)) / 2,
-        btnBack.y + (btnBack.height - 20) / 2,
+        btnBack.x + (btnBack.width - MeasureText("ATRAS", 20))/2,
+        btnBack.y + (btnBack.height - 20)/2,
         20, COLOR_TEXT);
 }
 
@@ -162,7 +187,7 @@ void draw_round(tLista *players)
 {
     int i;
     char name[MAX_BUFF_SIZE];
-    char buffer[MAX_BUFF_SIZE + 6]; // Más espacio para evitar desbordamiento
+    char buffer[MAX_BUFF_SIZE + 6]; // Mï¿½s espacio para evitar desbordamiento
 
     DrawText("Turnos asignados", screenWidth / 2 - MeasureText("Turnos asignados", 30) / 2, 50, 30, COLOR_TEXT);
 
