@@ -9,6 +9,7 @@
 #include "../parameters.h"
 #include "TDA_Lista.h"
 #include "cola.h"
+#include "data.h"
 
 #define     MAX_PLAYER_NAME     30
 
@@ -24,10 +25,11 @@
 typedef enum
 {
     MENU,
-    PLAYERS,
+    ENTER_PLAYERS,
     BOARD,
     RANKING,
-    PLAYER_READY,
+    ROUND,
+    PLAYERS_READY,
     EXIT
 } screens;
 
@@ -36,10 +38,11 @@ extern const int screenWidth;
 extern const int screenHeight;
 
 void    draw_menu               (void);
-void    draw_input_player       (void);
+void    draw_enter_players       (tInput *input);
 void    draw_board              (void);
 void    draw_ranking            (void);
 void    draw_player_ready       (void);
+void    draw_round(tLista *players);
 
 extern Rectangle btnPlay;
 extern Rectangle btnRanking;

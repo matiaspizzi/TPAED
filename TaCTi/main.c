@@ -6,8 +6,10 @@
 #include "libs/screens.h"
 #include "libs/interactions.h"
 
-#include "libs/TDA_Lista.h"
 #include "libs/data.h"
+
+
+#include "libs/TDA_Lista.h"
 #include "libs/cola.h"
 
 
@@ -18,10 +20,15 @@ int main()
 
     screens currentScreen = MENU;
 
-    tLista inputPlayers;
-    crearLista(&inputPlayers);
-    tCola gameTurn;
-    crearCola(&gameTurn);
+    //tPlayer player;
+    tInput input;
+    clear_input(&input);
+
+    tLista players_list;
+    crearLista(&players_list);
+
+    tCola player_queue;
+    crearCola(&player_queue);
 
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
@@ -31,17 +38,26 @@ int main()
         {
             case MENU:
             {
+                //  Se despliega el menu.
                 draw_menu();
                 currentScreen = update_menu();
                 break;
             }
-            case PLAYERS:
+            case ENTER_PLAYERS:
             {
-                draw_input_player();
-                currentScreen = update_input_player();
+                //  Se reciben los nombres de jugadores y enlistan.
+                draw_enter_players(&input);
+                currentScreen = update_enter_players(&input, &players_list);
                 break;
             }
-            case PLAYER_READY:
+            case ROUND:
+            {
+                //  Se otorgan los turnos para cada jugador.
+                draw_round(&players_list);
+                //currentScreen = update_round();
+                break;
+            }
+            case PLAYERS_READY:
             {
                 draw_player_ready();
 
@@ -67,7 +83,7 @@ int main()
     CloseWindow();
 
     printf("Jugadores ingresados: \n");
-    recorrerLista(&inputPlayers,MAX_BUFF_SIZE,printString);
+    recorrerLista(&players_list,MAX_BUFF_SIZE,printString);
     /*while(!colaVacia(&gameTurn))
     {
         sacarDeCola(&gameTurn, buffer, MAX_BUFF_SIZE);

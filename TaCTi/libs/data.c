@@ -1,9 +1,53 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
+
 #include "data.h"
 #include "TDA_Lista.h"
 
-tInput input = {{0},0,0};
+int reset_input(tInput *input)
+{
+    input->name[0] = '\0';
+    input->keyCount = 0;
+
+    return 1;
+}
+
+int clear_input(tInput *input)
+{
+    input->name[0] = '\0';
+    input->keyCount = 0;
+
+    return 1;
+}
+
+int list_player(tLista *player_list, tInput *input)
+{
+    tPlayer player;
+    player.points = 0;
+    memcpy(&player.name, input->name,strlen(input->name));
+    if (!ponerAlFinal(player_list, &player, sizeof(tPlayer)))
+    {
+        printf("Error al enlistar.\n");
+        return 0;
+    }
+    printf("%s enlistado.\n",input->name);
+
+    return 1;
+}
+
+
+
+int get_player(tPlayer *player, tLista *player_list)
+{
+    sacarAlFinal(player_list, player->name,strlen(player->name));
+    return 1;
+}
+
+void printStringBuff(void* buff, const void *data)
+{
+
+}
+
 
 void printString(const void *data)
 {

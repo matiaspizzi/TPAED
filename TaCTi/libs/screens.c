@@ -49,13 +49,13 @@ void draw_menu(void)
         20, COLOR_TEXT);
 }
 
-void draw_input_player(void)
+void draw_enter_players(tInput *input)
 {
     DrawText("Ingrese nombre", screenWidth/2 - MeasureText("Ingrese nombre", 30)/2, 120, 30, COLOR_TEXT);
 
     DrawRectangleRec(txtBox, GRAY);
     DrawRectangleLinesEx(txtBox, 2, DARKGRAY);
-    DrawText(input.name, txtBox.x + 10, txtBox.y + 15, 20, BLACK);
+    DrawText(input->name, txtBox.x + 10, txtBox.y + 15, 20, BLACK);
 
     DrawRectangleRec(btnNewPlayer, COLOR_BTN);
     DrawText("OTRO JUGADOR",
@@ -136,10 +136,10 @@ void draw_ranking()
         20, COLOR_TEXT);
 }
 
-void draw_player_ready(void)
+void draw_player_ready()
 {
 
-    //char buffer[64];
+    char buffer[MAX_BUFF_SIZE];
     //sprintf(buffer, "%s estas listo?", playerName);
 
     //DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
@@ -157,3 +157,26 @@ void draw_player_ready(void)
         20, COLOR_TEXT);
 }
 
+
+void draw_round(tLista *players)
+{
+    int i;
+    char name[MAX_BUFF_SIZE];
+    char buffer[MAX_BUFF_SIZE + 6]; // Más espacio para evitar desbordamiento
+
+    DrawText("Turnos asignados", screenWidth / 2 - MeasureText("Turnos asignados", 30) / 2, 50, 30, COLOR_TEXT);
+
+
+    while(!listaVacia(players))
+    {
+        sacarAlFinal(players,name,MAX_BUFF_SIZE);
+        sprintf(buffer, "%d - ", i+1,name);
+        DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
+    }
+
+    DrawRectangleRec(btnBack, COLOR_BTN);
+    DrawText("ATRAS",
+        btnBack.x + (btnBack.width - MeasureText("ATRAS", 20)) / 2,
+        btnBack.y + (btnBack.height - 20) / 2,
+        20, COLOR_TEXT);
+}

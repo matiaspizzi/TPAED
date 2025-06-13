@@ -1,7 +1,10 @@
+#include <stdio.h>
 #include "raylib.h"
 #include "screens.h"
 #include "interactions.h"
 #include "data.h"
+
+
 float errorTimer;
 int showError = 0;
 
@@ -10,82 +13,72 @@ int update_menu()
     Vector2 mouse = GetMousePosition();
     if (CheckCollisionPointRec(mouse, btnExit) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
+        printf("--> SALIR\n");
         return EXIT;
     }
     if (CheckCollisionPointRec(mouse, btnPlay) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        return PLAYERS;
+        printf("--> JUGAR\n");
+        return ENTER_PLAYERS;
     }
     if (CheckCollisionPointRec(mouse, btnRanking) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
+        printf("--> VER RANKING\n");
         return RANKING;
     }
     return MENU;
 }
 
-int update_input_player()
+int update_enter_players(tInput *input, tLista *players)
 {
     char key;
     Vector2 mouse = GetMousePosition();
     key = GetCharPressed();
     while (key > 0)
     {
-        if (isVALIDCHAR(key) && input.keyCount < MAX_BUFF_SIZE - 1)
+        if (isVALIDCHAR(key) && input->keyCount < MAX_BUFF_SIZE - 1)
         {
-            input.name[input.keyCount] = key;
-            input.keyCount++;
-            input.name[input.keyCount] = '\0';
+            input->name[input->keyCount] = key;
+            input->keyCount++;
+            input->name[input->keyCount] = '\0';
         }
         key = GetCharPressed();
     }
 
     //  Si se presiona backspace (borrar) elimina el ultimo caracter.
-    if (IsKeyPressed(KEY_BACKSPACE) && input.keyCount > 0)
+    if (IsKeyPressed(KEY_BACKSPACE) && input->keyCount > 0)
     {
-        input.keyCount--;
-        input.name[input.keyCount] = '\0';
+        input->keyCount--;
+        input->name[input->keyCount] = '\0';
     }
-    /// ----------------------------------------------------------------------------------------------------
-    /// Interacciones   ------------------------------------------------------------------------------------
-    //  Boton atras.
+
+    //  Boton atras --> Deshace lo ingresado y vuelve al menú.
     if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        input.name[0] = '\0';
-        input.keyCount = 0;
+        clear_input(input);
+        vaciarLista(players); ///-----< cambiar
         return MENU;
     }
 
-    //  Boton otro jugador.
+    //  Boton otro jugador --> Agrega al jugador a la lista y permite seguir ingresando más.
     if (CheckCollisionPointRec(mouse, btnNewPlayer) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        if (input.keyCount > 0)
+        if (input->keyCount > 0)
         {
-            //ponerAlFinal(players, input.name, input.keyCount);
-            input.cantPlayers++;
-            input.name[0] = '\0';
-            input.keyCount = 0;
+            list_player(players,input);
+            reset_input(input);
         }
     }
 
-    //  Boton comenzar.
+    //  Boton comenzar --> Agrega al jugador a la lista y  procede a otorgar los turnos.
     if (CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        if (input.keyCount > 0)
+        if (input->keyCount > 0)
         {
-            input.cantPlayers++;
-            input.name[0] = '\0';
-            input.keyCount = 0;
-
-            //ponerAlFinal(players, input, keyCount);
-            /*desordenarLista(players);
-            while(!listaVacia(players))
-            {
-                sacarAlFinal(players,&name,MAX_BUFF_SIZE);
-                ponerEnCola(gameTurn,&name,strlen(name));
-            }*/
+            list_player(players,input);
+            reset_input(input);
+            return ROUND;
         }
-        if (input.cantPlayers >= 1)
-            return PLAYER_READY;
         else
         {
             errorTimer = 2.0f;
@@ -105,12 +98,16 @@ int update_input_player()
             showError = 0;
         }
     }
-    return PLAYERS;
+    return ENTER_PLAYERS;
 }
-/*
 
 
-
-
-    /// ----------------------------------------------------------------------------------------------------
-*/
+int update_round()
+{
+    Vector2 mouse = GetMousePosition();
+    //  Boton atras.
+    if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        return MENU;
+    }
+}
