@@ -203,7 +203,7 @@ void draw_round(tLista *players)
     while(!listaVacia(players))
     {
         sacarAlFinal(players,name,MAX_BUFF_SIZE);
-        sprintf(buffer, "%d - ", i+1,name);
+        sprintf(buffer, "%d - %s", i+1, name);
         DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
     }
 
