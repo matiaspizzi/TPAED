@@ -24,7 +24,7 @@ int list_player(tLista *player_list, tInput *input)
 {
     tPlayer player;
     player.points = 0;
-    memcpy(&player.name, input->name,strlen(input->name));
+    strcpy(player.name, input->name);
     if (!ponerAlFinal(player_list, &player, sizeof(tPlayer)))
     {
         printf("Error al enlistar.\n");
