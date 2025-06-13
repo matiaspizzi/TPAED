@@ -149,15 +149,15 @@ void draw_ranking()
     }
 
 
-        if (cached_players != NULL && cached_players_count > 0) {
-            while(i<cached_players_count && i<10){
-                snprintf(buffer, sizeof(buffer), "%d - %s: %i points",
-                         i+1, cached_players[i].name, cached_players[i].points);
+    if (cached_players != NULL && cached_players_count > 0) {
+        while(i<cached_players_count && i<10){
+            snprintf(buffer, sizeof(buffer), "%d - %s: %i points",
+                        i+1, cached_players[i].name, cached_players[i].points);
 
-                if (100 + i*35 < screenHeight) {
-                    DrawText(buffer, 100, 100 + i*35, 30, COLOR_TEXT);
-                }
-                i++;
+            if (100 + i*35 < screenHeight) {
+                DrawText(buffer, 100, 100 + i*35, 30, COLOR_TEXT);
+            }
+            i++;
         }
     }
 
