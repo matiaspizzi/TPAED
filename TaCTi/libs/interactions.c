@@ -110,4 +110,18 @@ int update_round()
     {
         return MENU;
     }
+    return ROUND;
 }
+
+int update_ranking()
+{
+    Vector2 mouse = GetMousePosition();
+
+    if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        return MENU;
+    }
+
+    return RANKING;
+}
+

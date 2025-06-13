@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "screens.h"
 #include "data.h"
+#include "requests.h"
 
 #define CELL_SIZE 120
 
@@ -31,8 +32,14 @@ static int cached_players_count = 0;
 static double last_fetch_time = 0;
 const double REFRESH_INTERVAL = 30.0;
 
+void clear_ranking_cache() {
+    if (cached_players != NULL) {
+        free(cached_players);
+        cached_players = NULL;
+    }
+    cached_players_count = 0;
+}
 
-int draw_menu(Vector2 mouse)
 void draw_menu(void)
 {
     DrawText("Menu Principal", screenWidth/2 - MeasureText("Menu Principal", 30)/2, 120, 30, COLOR_TEXT);
@@ -122,8 +129,9 @@ void draw_board(void)
 
 void draw_ranking()
 {
-    int i;
-    char buffer[16]; // M�s espacio para evitar desbordamiento
+    int i = 0;
+    char buffer[MAX_BUFF_SIZE];
+    double current_time = GetTime();
 
     DrawText("Ranking", screenWidth/2 - MeasureText("Ranking", 30)/2, 50, 30, COLOR_TEXT);
 
@@ -141,15 +149,15 @@ void draw_ranking()
     }
 
 
-    if (cached_players != NULL && cached_players_count > 0) {
-        while(i<cached_players_count && i<10){
-            snprintf(buffer, sizeof(buffer), "%d - %s: %i points",
-                   i+1, cached_players[i].name, cached_players[i].points);
+        if (cached_players != NULL && cached_players_count > 0) {
+            while(i<cached_players_count && i<10){
+                snprintf(buffer, sizeof(buffer), "%d - %s: %i points",
+                         i+1, cached_players[i].name, cached_players[i].points);
 
-            if (100 + i*35 < screenHeight) {
-                DrawText(buffer, 100, 100 + i*35, 30, COLOR_TEXT);
-            }
-            i++;
+                if (100 + i*35 < screenHeight) {
+                    DrawText(buffer, 100, 100 + i*35, 30, COLOR_TEXT);
+                }
+                i++;
         }
     }
 

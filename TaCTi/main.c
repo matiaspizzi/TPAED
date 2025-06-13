@@ -79,6 +79,7 @@ int main()
             case RANKING:
             {
                 draw_ranking();
+                currentScreen = update_ranking();
                 break;
             }
             case EXIT:
