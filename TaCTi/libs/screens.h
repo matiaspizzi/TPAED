@@ -38,11 +38,11 @@ extern const int screenWidth;
 extern const int screenHeight;
 
 void    draw_menu               (void);
-void    draw_enter_players      (tInput *input);
-void    draw_board              (void);
-void    draw_ranking            (void);
-void    draw_player_ready       (void);
-void    draw_round              (tLista *players);
+void    draw_enter_players      (tSession *s);
+void    draw_board              (tSession *s);
+void    draw_ranking            (tSession *s);
+void    draw_player_ready       (tSession *s);
+void    draw_round              (tSession *s);
 void    clear_ranking_cache     ();
 
 extern Rectangle btnPlay;

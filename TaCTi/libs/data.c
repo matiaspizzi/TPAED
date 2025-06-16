@@ -4,33 +4,36 @@
 #include "data.h"
 #include "TDA_Lista.h"
 
+
+
+void init_session(tSession *s)
+{
+    s->input.keyCount = 0;
+    s->input.name[0] = '\0';
+    crearLista(&s->players_list);
+    crearCola(&s->players_queue);
+    s->qtyPlayers = 0;
+}
+
 int reset_input(tInput *input)
 {
-    input->name[0] = '\0';
     input->keyCount = 0;
-
+    input->name[0] = '\0';
     return 1;
 }
 
-int clear_input(tInput *input)
-{
-    input->name[0] = '\0';
-    input->keyCount = 0;
 
-    return 1;
-}
-
-int list_player(tLista *player_list, tInput *input)
+int list_player(tSession *s)
 {
     tPlayer player;
     player.points = 0;
-    strcpy(player.name, input->name);
-    if (!ponerAlFinal(player_list, &player, sizeof(tPlayer)))
+    strcpy(player.name, s->input.name);
+    if (!ponerAlFinal(&s->players_list, &player, sizeof(tPlayer)))
     {
         printf("Error al enlistar.\n");
         return 0;
     }
-    printf("%s enlistado.\n",input->name);
+    printf("%s enlistado.\n",s->input.name);
 
     return 1;
 }
@@ -54,3 +57,4 @@ void printString(const void *data)
     const char *text = (const char *)data;
     printf("%s\n", text);
 }
+

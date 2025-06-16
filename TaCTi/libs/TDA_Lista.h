@@ -28,9 +28,16 @@ int     verAlFinal                  (tLista *l, void *dato, unsigned tamDato);
 int     sacarAlFinal                (tLista *l, void *dato, unsigned tamDato);
 
 
-void recorrerLista(const tLista *p,
+
+void recorrerMostrarLista(const tLista *p,
                    unsigned cantBytes,
                    void (*mostrar)(const void *));
+
+
+void recorrerGuardandoLista(const tLista *p,
+unsigned cantBytes,
+void *dato, unsigned tamDato);
+
 
 void desordenarLista(tLista *p);
 

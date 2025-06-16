@@ -161,21 +161,28 @@ int sacarAlFinal(tLista *l, void *dato, unsigned tamDato)
 }
 
 
-void recorrerLista(const tLista *p,
+void recorrerMostrarLista(const tLista *p,
                    unsigned cantBytes,
                    void (*mostrar)(const void *))
 {
-    void *temp;
+    while(*p)
+    {
+        mostrar((*p)->info);
+        p = &(*p)->sig;
+    }
+}
+
+
+void recorrerGuardandoLista(const tLista *p,
+                   unsigned cantBytes,
+                   void *dato, unsigned tamDato)
+{
     int min;
 
     while(*p)
     {
         min = MIN(cantBytes, (*p)->tamInfo);
-        temp = malloc(min);
-        memcpy(temp, (*p)->info, min);
-        mostrar(temp);
-        free(temp);
+        memcpy(dato, (*p)->info, min);
         p = &(*p)->sig;
     }
 }
-
