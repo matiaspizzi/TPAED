@@ -6,9 +6,9 @@
 #define DATA_H_INCLUDED
 
 #include "TDA_Lista.h"
+#include "cola.h"
 
 #define isVALIDCHAR(c) (((c) >= 'A' && (c) <= 'Z') || ((c) >= 'a' && (c) <= 'z') || ((c) >= '0' && (c) <= '9') || (c) == ' ')
-
 
 #define     MAX_BUFF_SIZE       30
 #define     MAX_PLAYER_NAME     30
@@ -38,15 +38,18 @@ typedef struct
 }tInput;
 
 
+typedef struct
+{
+    tInput  input;
+    tLista  players_list;
+    tCola   players_queue;
+    int     qtyPlayers;
+}tSession;
 
+void init_session           (tSession *s);
+int  reset_input            (tInput *input);
 
-
-
-int reset_input         (tInput *intput);
-int clear_input         (tInput *input);
-
-
-int list_player         (tLista *player_list, tInput *input);
+int list_player             (tSession *s);
 void printString        (const void *data);
 #endif // DATA_H_INCLUDED
 
