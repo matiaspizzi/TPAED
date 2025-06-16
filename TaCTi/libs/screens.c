@@ -63,13 +63,13 @@ void draw_menu(void)
         20, COLOR_TEXT);
 }
 
-void draw_enter_players(tInput *input)
+void draw_enter_players(tSession *s)
 {
     DrawText("Ingrese nombre", screenWidth/2 - MeasureText("Ingrese nombre", 30)/2, 120, 30, COLOR_TEXT);
 
     DrawRectangleRec(txtBox, GRAY);
     DrawRectangleLinesEx(txtBox, 2, DARKGRAY);
-    DrawText(input->name, txtBox.x + 10, txtBox.y + 15, 20, BLACK);
+    DrawText(s->input.name, txtBox.x + 10, txtBox.y + 15, 20, BLACK);
 
     DrawRectangleRec(btnNewPlayer, COLOR_BTN);
     DrawText("OTRO JUGADOR",
@@ -90,7 +90,7 @@ void draw_enter_players(tInput *input)
         20, COLOR_TEXT);
 }
 
-void draw_board(void)
+void draw_board(tSession *s)
 {
     //  Se ubica el tablero en el centro de la ventana.
     const int offsetX = screenWidth/2 - (CELL_SIZE * 3) / 2;
@@ -127,7 +127,7 @@ void draw_board(void)
     }
 }
 
-void draw_ranking()
+void draw_ranking(tSession *s)
 {
     int i = 0;
     char buffer[MAX_BUFF_SIZE];
@@ -169,7 +169,7 @@ void draw_ranking()
         20, COLOR_TEXT);
 }
 
-void draw_player_ready()
+void draw_player_ready(tSession *s)
 {
 
     char buffer[MAX_BUFF_SIZE];
@@ -191,18 +191,19 @@ void draw_player_ready()
 }
 
 
-void draw_round(tLista *players)
+void draw_round(tSession *s)
 {
-    int i;
+    int i = 0;
     char name[MAX_BUFF_SIZE];
-    char buffer[MAX_BUFF_SIZE + 6]; // M�s espacio para evitar desbordamiento
+    char buffer[MAX_BUFF_SIZE + 6]; // Mas espacio para evitar desbordamiento
 
     DrawText("Turnos asignados", screenWidth / 2 - MeasureText("Turnos asignados", 30) / 2, 50, 30, COLOR_TEXT);
 
 
-    while(!listaVacia(players))
+    while(!listaVacia(&s->players_list))
     {
-        sacarAlFinal(players,name,MAX_BUFF_SIZE);
+        i++;
+        sacarAlFinal(&s->players_list,name,MAX_BUFF_SIZE);
         sprintf(buffer, "%d - %s", i+1, name);
         DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
     }

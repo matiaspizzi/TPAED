@@ -8,7 +8,6 @@
 
 #include "libs/data.h"
 
-
 #include "libs/TDA_Lista.h"
 #include "libs/cola.h"
 
@@ -21,15 +20,8 @@ int main()
     screens currentScreen = MENU;
     screens prevScreen = MENU;
 
-    //tPlayer player;
-    tInput input;
-    clear_input(&input);
-
-    tLista players_list;
-    crearLista(&players_list);
-
-    tCola player_queue;
-    crearCola(&player_queue);
+    tSession session;
+    init_session(&session);
 
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
@@ -54,32 +46,32 @@ int main()
             case ENTER_PLAYERS:
             {
                 //  Se reciben los nombres de jugadores y enlistan.
-                draw_enter_players(&input);
-                currentScreen = update_enter_players(&input, &players_list);
+                draw_enter_players(&session);
+                currentScreen = update_enter_players(&session);
                 break;
             }
             case ROUND:
             {
                 //  Se otorgan los turnos para cada jugador.
-                draw_round(&players_list);
-                //currentScreen = update_round();
+                draw_round(&session);
+                currentScreen = update_round(&session);
                 break;
             }
             case PLAYERS_READY:
             {
-                draw_player_ready();
+                draw_player_ready(&session);
 
                 break;
             }
             case BOARD:
             {
-                draw_board();
+                draw_board(&session);
                 break;
             }
             case RANKING:
             {
-                draw_ranking();
-                currentScreen = update_ranking();
+                draw_ranking(&session);
+                currentScreen = update_ranking(&session);
                 break;
             }
             case EXIT:
@@ -92,7 +84,7 @@ int main()
     CloseWindow();
 
     printf("Jugadores ingresados: \n");
-    recorrerLista(&players_list,MAX_BUFF_SIZE,printString);
+    recorrerMostrarLista(&session.players_list,MAX_BUFF_SIZE,printString);
     /*while(!colaVacia(&gameTurn))
     {
         sacarDeCola(&gameTurn, buffer, MAX_BUFF_SIZE);
