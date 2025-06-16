@@ -3,10 +3,10 @@
 
 
 
-int update_menu();
-int update_enter_players(tInput *input, tLista *players);
-int update_round();
-int update_ranking();
+int update_menu             ();
+int update_enter_players    (tSession *s);
+int update_round            (tSession *s);
+int update_ranking          (tSession *s);
 
 
 #endif // INTERACTIONS_H_INCLUDED
