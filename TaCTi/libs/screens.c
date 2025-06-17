@@ -148,7 +148,6 @@ void draw_ranking(tSession *s)
         last_fetch_time = current_time;
     }
 
-
     if (cached_players != NULL && cached_players_count > 0) {
         while(i<cached_players_count && i<10){
             snprintf(buffer, sizeof(buffer), "%d - %s: %i points",
@@ -161,7 +160,6 @@ void draw_ranking(tSession *s)
         }
     }
 
-
     DrawRectangleRec(btnBack, COLOR_BTN);
     DrawText("ATRAS",
         btnBack.x + (btnBack.width - MeasureText("ATRAS", 20))/2,
@@ -171,12 +169,9 @@ void draw_ranking(tSession *s)
 
 void draw_player_ready(tSession *s)
 {
-
     char buffer[MAX_BUFF_SIZE];
     //sprintf(buffer, "%s estas listo?", playerName);
-
     //DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
-
     DrawRectangleRec(btnStart, COLOR_BTN);
     DrawText("COMENZAR",
         btnStart.x + (btnStart.width - MeasureText("COMENZAR", 20)) / 2,
@@ -199,14 +194,15 @@ void draw_round(tSession *s)
 
     DrawText("Turnos asignados", screenWidth / 2 - MeasureText("Turnos asignados", 30) / 2, 50, 30, COLOR_TEXT);
 
-
-    while(!listaVacia(&s->players_list))
+    for (i = 0; i < s->qtyPlayers; i++)
     {
-        i++;
-        sacarAlFinal(&s->players_list,name,MAX_BUFF_SIZE);
-        sprintf(buffer, "%d - %s", i+1, name);
-        DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
+        if (verEnPosicion(&s->players_list, i, name, MAX_BUFF_SIZE))
+        {
+            sprintf(buffer, "%d - %s", i + 1, name);
+            DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
+        }
     }
+
 
     DrawRectangleRec(btnBack, COLOR_BTN);
     DrawText("ATRAS",

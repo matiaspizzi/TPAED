@@ -27,16 +27,14 @@ int     ponerAlFinal                (tLista *l, void *dato, unsigned tamDato);
 int     verAlFinal                  (tLista *l, void *dato, unsigned tamDato);
 int     sacarAlFinal                (tLista *l, void *dato, unsigned tamDato);
 
-
+int verEnPosicion(tLista *l, unsigned pos, void *dato, unsigned tamDato);
 
 void recorrerMostrarLista(const tLista *p,
                    unsigned cantBytes,
                    void (*mostrar)(const void *));
 
 
-void recorrerGuardandoLista(const tLista *p,
-unsigned cantBytes,
-void *dato, unsigned tamDato);
+void recorrerGuardandoLista(const tLista *p,void *dato, unsigned tamDato);
 
 
 void desordenarLista(tLista *p);

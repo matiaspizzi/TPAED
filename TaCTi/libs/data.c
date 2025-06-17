@@ -38,7 +38,10 @@ int list_player(tSession *s)
     return 1;
 }
 
+int set_round(tSession *s)
+{
 
+}
 
 int get_player(tPlayer *player, tLista *player_list)
 {

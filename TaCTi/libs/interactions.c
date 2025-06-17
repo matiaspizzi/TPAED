@@ -68,6 +68,7 @@ int update_enter_players(tSession *s)
         {
             list_player(s);
             reset_input(&s->input);
+            s->qtyPlayers++;
         }
         else
         {
@@ -83,6 +84,9 @@ int update_enter_players(tSession *s)
         {
             list_player(s);
             reset_input(&s->input);
+            s->qtyPlayers++;
+            if(s->qtyPlayers == 1)
+                return BOARD;
             return ROUND;
         }
         else
@@ -107,7 +111,7 @@ int update_enter_players(tSession *s)
 }
 
 
-int update_round(tSession *s)
+int update_round()
 {
     Vector2 mouse = GetMousePosition();
     //  Boton atras.
