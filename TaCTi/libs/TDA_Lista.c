@@ -173,16 +173,24 @@ void recorrerMostrarLista(const tLista *p,
 }
 
 
-void recorrerGuardandoLista(const tLista *p,
-                   unsigned cantBytes,
-                   void *dato, unsigned tamDato)
+void recorrerGuardandoLista(const tLista *p, void *dato, unsigned tamDato)
 {
-    int min;
-
     while(*p)
     {
-        min = MIN(cantBytes, (*p)->tamInfo);
-        memcpy(dato, (*p)->info, min);
+        memcpy(dato, (*p)->info, MIN(tamDato, (*p)->tamInfo));
         p = &(*p)->sig;
     }
+}
+
+int verEnPosicion(tLista *l, unsigned pos, void *dato, unsigned tamDato)
+{
+    int i = 0;
+    if(!l || !dato)
+        return ERROR;
+
+    while(*l )
+    {
+        memcpy
+    }
+
 }

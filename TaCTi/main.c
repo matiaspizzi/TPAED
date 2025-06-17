@@ -53,6 +53,7 @@ int main()
             case ROUND:
             {
                 //  Se otorgan los turnos para cada jugador.
+                set_round(&session);
                 draw_round(&session);
                 currentScreen = update_round(&session);
                 break;
