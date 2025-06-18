@@ -43,6 +43,17 @@ void clear_ranking_cache()
     cached_players_count = 0;
 }
 
+int compare_players(const void *a, const void *b) {
+    const tPlayer *playerA = (const tPlayer *)a;
+    const tPlayer *playerB = (const tPlayer *)b;
+    return playerB->points - playerA->points;
+}
+
+void sort_ranking(tPlayer *players, int count) {
+    if (players == NULL || count <= 0) return;
+    qsort(players, count, sizeof(tPlayer), compare_players);
+}
+
 void draw_menu(void)
 {
     DrawText("Menu Principal", screenWidth/2 - MeasureText("Menu Principal", 30)/2, 120, 30, COLOR_TEXT);
@@ -151,9 +162,9 @@ void draw_ranking(tSession *s)
         }
 
         cached_players_count = get_players(&cached_players);
+        sort_ranking(cached_players, cached_players_count);
         last_fetch_time = current_time;
     }
-
 
     if (cached_players != NULL && cached_players_count > 0) {
         while(i<cached_players_count && i<10){
