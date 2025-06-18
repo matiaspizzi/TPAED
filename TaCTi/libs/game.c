@@ -24,7 +24,6 @@ void init_match(tPlays *p)
     {
         printf("Arranca PC\n");
         p->curr_symbol = p->pc_symbol;
-        pc_playing(board,p);
     }
     else
     {
@@ -35,6 +34,7 @@ void init_match(tPlays *p)
 
 int human_playing(int board[3][3], tPlays *p, int i, int j)
 {
+    int valor;
     if (full_board(board))
     {
         return DRAW;     // Empate, no quedan más movimientos.
@@ -43,15 +43,13 @@ int human_playing(int board[3][3], tPlays *p, int i, int j)
     // Validar que la casilla esté libre
     if (i < 0 || i > 2 || j < 0 || j > 2 || board[i][j] != 0)
     {
-        // Movimiento inválido, se puede manejar con un código especial o repetir turno
-        // o algún código para que el jugador elija otra casilla.
+        // Movimiento inválido
         return HUMAN_PLAY;
     }
 
-    // Marca la jugada del humano (valor 1)
-    board[i][j] = 1;
-
-    int valor = (i + 1) * (int)pow(10, j);
+    // Marca la jugada del humano
+    board[i][j] = p->human_symbol;
+    valor = (i + 1) * (int)pow(10, j);
     ponerAlFinal(&p->human, (void*)&valor, sizeof(int));
 
     if (check_tateti(&p->human) == 1)
@@ -59,50 +57,40 @@ int human_playing(int board[3][3], tPlays *p, int i, int j)
         // Humano gana
         return HUMAN_WIN;
     }
-
+    //return pc_playing(int board[3][3], tPlays *p);
     // Continúa el juego, turno PC
     return PC_PLAY;
 }
 
+
 int pc_playing(int board[3][3], tPlays *p)
 {
-    int i, j;
-
+    int sacarHumano;
+    int row,col;
     // 1. Intentar ganar
-    if (traverse_tateti(board, p, PC_WIN, &i, &j))
+    if (traverse_tateti(board, &p->pc,&row,&col))
     {
-        board[i][j] = p->pc_symbol;
-        int valor = (i + 1) * (int)(pow(10, j));
-        ponerAlFinal(&p->pc, &valor, sizeof(int));
+        board[row][col] = p->pc_symbol;
         return PC_WIN;
     }
-
-    // 2. Intentar bloquear al humano
-    if (traverse_tateti(board, p, HUMAN_WIN, &i, &j))
+    else if (traverse_tateti(board, &p->human, &row, &col))
     {
-        board[i][j] = p->pc_symbol;
-        int valor = (i + 1) * (int)(pow(10, j));
-        ponerAlFinal(&p->pc, &valor, sizeof(int));
-        return HUMAN_PLAY;
+        // 2. Intentar bloquear al humano
+        board[row][col] = p->pc_symbol;
+        sacarAlFinal(&p->human,&sacarHumano,sizeof(int));
+        ponerAlFinal(&p->pc, &sacarHumano, sizeof(int));
     }
-
-    // 3. Elegir aleatorio
-    if (randomPosition(board, p, &i, &j) == 0)
+    else
     {
-        return DRAW;
+        if(randomPosition(board, &p->pc, p->pc_symbol) == 0)
+            return DRAW;
     }
-
-    board[i][j] = p->pc_symbol;
-    int valor = (i + 1) * (int)(pow(10, j));
-    ponerAlFinal(&p->pc, &valor, sizeof(int));
-
     return HUMAN_PLAY;
 }
 
 int check_tateti(tLista* p)
 {
     static int vecAnswers[8] = { 6, 60, 111, 123, 222, 321, 333, 600 };
-    tLista pri = *p;
     tLista i = *p;
     tLista j;
     tLista k;
@@ -118,8 +106,7 @@ int check_tateti(tLista* p)
             {
                 if(make_row(* ((int*) i->info) + * ((int*) j->info) + * ((int*) k->info), vecAnswers) == 1)
                 {
-                    *p = pri;
-                    return 1;
+                    return WIN;
                 }
                 k = k->sig;
             }
@@ -127,10 +114,8 @@ int check_tateti(tLista* p)
         }
         i = i->sig;
     }
-    *p = pri;
-    return 0;
+    return ERROR;
 }
-
 
 int make_row(int magicNum, int* vecAnswers)
 {
@@ -143,8 +128,6 @@ int make_row(int magicNum, int* vecAnswers)
     }
     return 0;
 }
-
-
 
 int full_board(int board[3][3])
 {
@@ -159,90 +142,76 @@ int full_board(int board[3][3])
     return 1;  // No hay lugares libres → matriz completa
 }
 
-int randomPosition(int board[3][3], tPlays *p, int *iOut, int *jOut)
+int randomPosition(int  board[3][3], tLista* p_pc, int symbol)
 {
-    int libres[9][2];  // Guardamos coordenadas posibles
-    int count = 0;
+    int valor;
+    int a = 0;
+    int ai = 0;
+    int aj = 0;
+    /// a = Se fija si hubo algún '0'
 
-    // Buscar posiciones libres
+    /// ai y aj son las filas y columnas del '0' seleccionado.
+
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            if (board[i][j] == 0)
+            if ( board[i][j] == 0)
             {
-                libres[count][0] = i;
-                libres[count][1] = j;
-                count++;
+                if ( a == 0 )
+                {
+                    a = 1;
+                    ai = i;
+                    aj = j;
+                }
+                /// Elige aleatoriamente si, un elemento que es '0', pasa a ser el nuevo seleccionado.
+                if ( rand() % 2 == 0)
+                {
+                    ai = i;
+                    aj = j;
+                }
             }
         }
     }
+    if ( a != 0)
+    {
+        /// El último seleccionado pasa a ser un '2' (PC)
+        board[ai][aj] = 2;
 
-    if (count == 0)
-        return 0;  // No hay lugar
-
-    // Elegir una posición libre aleatoria
-    srand(time(NULL));  // Inicializar semilla (ideal hacerlo una sola vez en main)
-    int pos = rand() % count;
-    int i = libres[pos][0];
-    int j = libres[pos][1];
-
-    *iOut = i;
-    *jOut = j;
-
-    /*// Generar valor estilo (i+1) * 10^j
-    int valor = (i + 1) * (int)(pow(10, j));
-    ponerAlFinal(&p->pc, &valor, sizeof(int));*/
-
-    return 1;  // Jugada exitosa
+        /// Incluye el valor en la Lista PC.
+        valor = (ai + 1)* ( pow(10, aj));
+        ponerAlFinal(p_pc,(void*)&valor, sizeof(int));
+        return 1;
+    }
+    /// Retorna 0 (Es decir, NO pudo elegir aleatorio (matriz llena) y es EMPATE
+    return 0;
 }
 
 
-int traverse_tateti(int board[3][3], tPlays *p, int winTo, int *out_i, int *out_j)
+
+int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
 {
     int valor;
     int drop;
-    if (winTo == PC_WIN)
+    int i,j;
+    for(i = 0; i < 3; i++)
     {
-        for (int i = 0; i < 3; i++)
+        for (j = 0; j < 3; j++)
         {
-            for (int j = 0; j < 3; j++)
+            if (board[i][j] == 0)
             {
-                if (board[i][j] == 0)
+                valor = (i + 1)* ( pow(10, j));
+                ponerAlFinal(p, (void*)&valor, sizeof(int));
+                if(check_tateti(p) == 1)
                 {
-                    valor = (i + 1) * (pow(10, j));
-                    ponerAlFinal(&p->pc, (void*)&valor, sizeof(int));
-                    if (check_tateti(&p->pc) == 1)
-                    {
-                        *out_i = i;
-                        *out_j = j;
-                        return 1; // encontró jugada ganadora
-                    }
-                    sacarAlFinal(&p->pc, &drop, sizeof(int));
+                    *row = i;
+                    *col = j;
+                    return 1;
                 }
+                sacarAlFinal(p,&drop,sizeof(int));
             }
         }
-    }
-    else
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                if (board[i][j] == 0)
-                {
-                    valor = (i + 1) * (pow(10, j));
-                    ponerAlFinal(&p->human, (void*)&valor, sizeof(int));
-                    if (check_tateti(&p->human) == 1)
-                    {
-                        *out_i = i;
-                        *out_j = j;
-                        return 1; // encontró jugada bloqueadora
-                    }
-                    sacarAlFinal(&p->human, &drop, sizeof(int));
-                }
-            }
-        }
+
     }
     return 0;
 }

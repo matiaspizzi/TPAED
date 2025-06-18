@@ -16,19 +16,17 @@
 #define XSYM  1
 #define OSYM  2
 
-
 void    init_match(tPlays *p);
 int     human_playing(int board[3][3], tPlays *p, int i, int j);
-int     pc_playing(int board[3][3], tPlays *p);
-int     make_row(int magicNum, int* vecRespestas);
 int     full_board(int board[3][3]);
-int     traverse_tateti(int board[3][3], tPlays *p, int winTo, int *out_i, int *out_j);
-int     randomPosition(int board[3][3], tPlays *p, int *iOut, int *jOut);
+int     traverse_tateti(int board[3][3], tLista *p, int *row, int *col);
+int     make_row(int magicNum, int* vecAnswers);
+int     randomPosition(int  board[3][3], tLista* p_pc, int symbol);
+int     pc_playing(int board[3][3], tPlays *p);
+int     check_tateti(tLista* l);
 
 
-int     check_tateti(tLista* p);
 
-int     check_tateti_board(int board[3][3], int jugador);
 
 
 
