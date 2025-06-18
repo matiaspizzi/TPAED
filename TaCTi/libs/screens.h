@@ -27,6 +27,7 @@ typedef enum
     MENU,
     ENTER_PLAYERS,
     BOARD,
+    GAME_OVER,
     RANKING,
     ROUND,
     PLAYERS_READY,
@@ -41,6 +42,7 @@ extern const int screenHeight;
 void    draw_menu               (void);
 void    draw_enter_players      (tSession *s);
 void    draw_board              (tSession *s);
+void    draw_game_over              (tSession *s);
 void    draw_ranking            (tSession *s);
 void    draw_player_ready       (tSession *s);
 void    draw_round              (tSession *s);
@@ -52,7 +54,7 @@ extern Rectangle btnExit;
 extern Rectangle btnNewPlayer;
 extern Rectangle btnStart;
 extern Rectangle btnBack;
-extern Rectangle btnBack2;
+extern Rectangle btnNext;
 extern Rectangle btnSurrender;
 extern Rectangle txtBox;
 

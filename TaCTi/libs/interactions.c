@@ -22,8 +22,8 @@ int update_menu()
     }
     if (CheckCollisionPointRec(mouse, btnRanking) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        printf("--> VER RANKING\n");
-        return RANKING;
+        //printf("--> VER RANKING\n");
+        //return RANKING;
     }
     return MENU;
 }
@@ -178,19 +178,18 @@ int update_board(tSession *s, tPlays *p)
                     if (board[row][col] == 0)
                     {
                         res = human_playing(board, p,row,col);
-                        board[row][col] = p->human_symbol;
                         switch(res)
                         {
                             case DRAW:
                             {
                                 printf("Empate\n");
-                                return MENU;
+                                return GAME_OVER;
                                 break;
                             }
                             case HUMAN_WIN:
                             {
                                 printf("Gana usuario\n");
-                                return MENU;
+                                return GAME_OVER;
                             }
                             case PC_PLAY:
                             {
@@ -215,13 +214,13 @@ int update_board(tSession *s, tPlays *p)
             case DRAW:
             {
                 printf("Empate\n");
-                return MENU;
+                return GAME_OVER;
                 break;
             }
             case PC_WIN:
             {
                 printf("Gana PC\n");
-                return MENU;
+                return GAME_OVER;
             }
             case HUMAN_PLAY:
             {
@@ -229,9 +228,19 @@ int update_board(tSession *s, tPlays *p)
                 break;
             }
         }
-        return BOARD;
     }
     return BOARD;
+}
+
+int update_game_over()
+{
+   /* Vector2 mouse = GetMousePosition();
+    if (CheckCollisionPointRec(mouse, btnNext) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        printf("--> GUARDAR\n");
+        return MENU;
+    }*/
+    return GAME_OVER;
 }
 
 
