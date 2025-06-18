@@ -35,10 +35,10 @@ void init_match(tPlays *p)
 int human_playing(int board[3][3], tPlays *p, int i, int j)
 {
     int valor;
-    if (full_board(board))
+    /*if (full_board(board))
     {
         return DRAW;     // Empate, no quedan más movimientos.
-    }
+    }*/
 
     // Validar que la casilla esté libre
     if (i < 0 || i > 2 || j < 0 || j > 2 || board[i][j] != 0)
@@ -61,7 +61,6 @@ int human_playing(int board[3][3], tPlays *p, int i, int j)
     // Continúa el juego, turno PC
     return PC_PLAY;
 }
-
 
 int pc_playing(int board[3][3], tPlays *p)
 {
@@ -176,18 +175,22 @@ int randomPosition(int  board[3][3], tLista* p_pc, int symbol)
     if ( a != 0)
     {
         /// El último seleccionado pasa a ser un '2' (PC)
-        board[ai][aj] = 2;
+        board[ai][aj] = symbol;
 
         /// Incluye el valor en la Lista PC.
         valor = (ai + 1)* ( pow(10, aj));
         ponerAlFinal(p_pc,(void*)&valor, sizeof(int));
+
+        if(full_board(board))
+        {
+            return 0;
+        }
+
         return 1;
     }
     /// Retorna 0 (Es decir, NO pudo elegir aleatorio (matriz llena) y es EMPATE
     return 0;
 }
-
-
 
 int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
 {
@@ -216,23 +219,5 @@ int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
     return 0;
 }
 
-
-
-int check_tateti_board(int board[3][3], int jugador)
-{
-    for (int i = 0; i < 3; i++)
-    {
-        if (board[i][0] == jugador && board[i][1] == jugador && board[i][2] == jugador)
-            return 1;
-        if (board[0][i] == jugador && board[1][i] == jugador && board[2][i] == jugador)
-            return 1;
-    }
-    if (board[0][0] == jugador && board[1][1] == jugador && board[2][2] == jugador)
-        return 1;
-    if (board[0][2] == jugador && board[1][1] == jugador && board[2][0] == jugador)
-        return 1;
-
-    return 0;
-}
 
 

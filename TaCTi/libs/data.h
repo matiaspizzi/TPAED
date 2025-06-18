@@ -44,7 +44,7 @@ typedef struct
     tLista  players_list;
     tCola   players_queue;
     int     qtyPlayers;
-
+    tLista  score_list;
 }tSession;
 
 
