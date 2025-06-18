@@ -33,6 +33,7 @@ typedef enum
     EXIT
 } screens;
 
+extern const char *screens_str[];
 
 extern const int screenWidth;
 extern const int screenHeight;
@@ -51,8 +52,13 @@ extern Rectangle btnExit;
 extern Rectangle btnNewPlayer;
 extern Rectangle btnStart;
 extern Rectangle btnBack;
+extern Rectangle btnBack2;
 extern Rectangle btnSurrender;
 extern Rectangle txtBox;
+
+//  Tablero
 extern Rectangle grid[3][3];
+extern Rectangle cell;
+extern int board[3][3];
 
 #endif // SCREENS_H_INCLUDED
