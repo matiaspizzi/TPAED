@@ -15,5 +15,11 @@ int parse_players(const char *, tPlayer *, int);
 int get_players(tPlayer **);
 void parse_json_players(const char*, tPlayer *, int*);
 
+char *escape_quotes(const char *input);
+int execute_curl(const char *curl_command, char *response, size_t response_size);
+char *build_post_json(const tPlayer *players, int player_count);
+int post_players(const tPlayer *players, int player_count);
+int delete_all_players();
+
 #endif
 
