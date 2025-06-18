@@ -1,16 +1,16 @@
 /**
-    Esta librería contiene todo lo relacionado a la gestion de los datos.
+    Esta librerï¿½a contiene todo lo relacionado a la gestion de los datos.
 **/
 
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
 
 #include "TDA_Lista.h"
+#include "cola.h"
 
 #define isVALIDCHAR(c) (((c) >= 'A' && (c) <= 'Z') || ((c) >= 'a' && (c) <= 'z') || ((c) >= '0' && (c) <= '9') || (c) == ' ')
 
-
-#define     MAX_BUFF_SIZE       30
+#define     MAX_BUFF_SIZE       100
 #define     MAX_PLAYER_NAME     30
 
 #define     OK      1
@@ -38,15 +38,29 @@ typedef struct
 }tInput;
 
 
+typedef struct
+{
+    tInput  input;
+    tLista  players_list;
+    tCola   players_queue;
+    int     qtyPlayers;
+}tSession;
 
 
+
+
+
+
+
+void init_session           (tSession *s);
+void drop_session           (tSession *s);
+int  reset_input            (tInput *input);
+int queue_player            (tSession *s);
+int list_player             (tSession *s);
+void printString            (const void *data);
+int get_player              (tPlayer *p, tSession *s);
+int fifty_fifty();
 void save_game_report(char name[MAX_PLAYER_NAME], int points, int board[3][3], int winner);
 
-int reset_input         (tInput *intput);
-int clear_input         (tInput *input);
-
-
-int list_player         (tLista *player_list, tInput *input);
-void printString        (const void *data);
 #endif // DATA_H_INCLUDED
 

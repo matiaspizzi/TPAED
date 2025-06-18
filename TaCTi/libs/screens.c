@@ -3,6 +3,8 @@
 #include "raylib.h"
 #include "screens.h"
 #include "data.h"
+
+#include "game.h"
 #include "requests.h"
 
 #define CELL_SIZE 120
@@ -10,6 +12,7 @@
 const int screenWidth = 800;
 const int screenHeight = 600;
 
+const char *screens_str[] = {"MENU","ENTER_PLAYERS","BOARD","RANKING","ROUND","PLAYERS_READY","EXIT"};
 
 int board[3][3] = {0};
 
@@ -21,18 +24,20 @@ Rectangle btnExit       =   { screenWidth/2.0f - 150, 360, 300, 50 };
 Rectangle btnNewPlayer  =   { screenWidth/2.0f - 150, 280, 300, 50 };
 Rectangle btnStart      =   { screenWidth/2.0f - 150, 360, 300, 50 };
 Rectangle btnBack       =   { screenWidth/2.0f - 150, 440, 300, 50 };
+Rectangle btnNext       =   { screenWidth/2.0f - 150, 440, 300, 50 };
 Rectangle btnSurrender  =   { screenWidth/2.0f - 150, 440, 300, 50 };
 Rectangle txtBox        =   { screenWidth/2.0f - 200, 200, 400, 50 };
 Rectangle grid[3][3];
 
 
 
-static tPlayer *cached_players = NULL;
-static int cached_players_count = 0;
-static double last_fetch_time = 0;
-const double REFRESH_INTERVAL = 30.0;
+static          tPlayer *cached_players = NULL;
+static int      cached_players_count = 0;
+static double   last_fetch_time = 0;
+const double    REFRESH_INTERVAL = 30.0;
 
-void clear_ranking_cache() {
+void clear_ranking_cache()
+{
     if (cached_players != NULL) {
         free(cached_players);
         cached_players = NULL;
@@ -63,13 +68,13 @@ void draw_menu(void)
         20, COLOR_TEXT);
 }
 
-void draw_enter_players(tInput *input)
+void draw_enter_players(tSession *s)
 {
     DrawText("Ingrese nombre", screenWidth/2 - MeasureText("Ingrese nombre", 30)/2, 120, 30, COLOR_TEXT);
 
     DrawRectangleRec(txtBox, GRAY);
     DrawRectangleLinesEx(txtBox, 2, DARKGRAY);
-    DrawText(input->name, txtBox.x + 10, txtBox.y + 15, 20, BLACK);
+    DrawText(s->input.name, txtBox.x + 10, txtBox.y + 15, 20, BLACK);
 
     DrawRectangleRec(btnNewPlayer, COLOR_BTN);
     DrawText("OTRO JUGADOR",
@@ -90,7 +95,7 @@ void draw_enter_players(tInput *input)
         20, COLOR_TEXT);
 }
 
-void draw_board(void)
+void draw_board(tSession *s)
 {
     //  Se ubica el tablero en el centro de la ventana.
     const int offsetX = screenWidth/2 - (CELL_SIZE * 3) / 2;
@@ -99,10 +104,13 @@ void draw_board(void)
     int textWidth = MeasureText("X", fontSize);
     int textHeight = fontSize; // Raylib no tiene MeasureTextHeight, pero se asume aprox = fontSize
 
-    //aca falta buffer y sprintf para el nombre del jugador
+    char buffer[MAX_BUFF_SIZE];
+    tPlayer p;
+    get_player(&p, s);
+    sprintf(buffer, "Turno de: %s", p.name);
 
     /// Visuales   -----------------------------------------------------------------------------------------
-    DrawText("Turno de: &player_name", screenWidth/2 - MeasureText("Turno de: &player_name", 30)/2, 50, 30, COLOR_TEXT);
+    DrawText(buffer, screenWidth/2 - MeasureText(buffer, 30)/2, 50, 30, COLOR_TEXT);
     // Dibujar las celdas y guardar las posiciones
     for (int row = 0; row < 3; row++)
     {
@@ -115,11 +123,11 @@ void draw_board(void)
             DrawRectangleLinesEx(cell, 2, COLOR_TEXT);
 
             // Dibujar X / O
-            if (board[row][col] == 1)
+            if (board[row][col] == XSYM)
                 DrawText("X", cell.x + (CELL_SIZE - textWidth) / 2,
                     cell.y + (CELL_SIZE - textHeight) / 2,
                     fontSize, COLOR_X);
-            else if (board[row][col] == 2)
+            else if (board[row][col] == OSYM)
                 DrawText("O", cell.x + (CELL_SIZE - textWidth) / 2,
                     cell.y + (CELL_SIZE - textHeight) / 2,
                     fontSize, COLOR_O);
@@ -127,7 +135,7 @@ void draw_board(void)
     }
 }
 
-void draw_ranking()
+void draw_ranking(tSession *s)
 {
     int i = 0;
     char buffer[MAX_BUFF_SIZE];
@@ -169,13 +177,15 @@ void draw_ranking()
         20, COLOR_TEXT);
 }
 
-void draw_player_ready()
+void draw_player_ready(tSession *s)
 {
 
     char buffer[MAX_BUFF_SIZE];
-    //sprintf(buffer, "%s estas listo?", playerName);
+    tPlayer p;
+    get_player(&p, s);
+    sprintf(buffer, "%s estas listo?", p.name);
 
-    //DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
+    DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
 
     DrawRectangleRec(btnStart, COLOR_BTN);
     DrawText("COMENZAR",
@@ -190,22 +200,26 @@ void draw_player_ready()
         20, COLOR_TEXT);
 }
 
-
-void draw_round(tLista *players)
+void draw_round(tSession *s)
 {
-    int i;
+    int i = 0;
     char name[MAX_BUFF_SIZE];
-    char buffer[MAX_BUFF_SIZE + 6]; // M�s espacio para evitar desbordamiento
+    char buffer[MAX_BUFF_SIZE + 6]; // Mas espacio para evitar desbordamiento
 
     DrawText("Turnos asignados", screenWidth / 2 - MeasureText("Turnos asignados", 30) / 2, 50, 30, COLOR_TEXT);
 
-
-    while(!listaVacia(players))
+    for(i = 0 ; i < s->qtyPlayers; i++)
     {
-        sacarAlFinal(players,name,MAX_BUFF_SIZE);
-        sprintf(buffer, "%d - ", i+1,name);
+        verEnPosicion(&s->players_list,i,&name,MAX_BUFF_SIZE);
+        sprintf(buffer, "%d - %s", i+1, name);
         DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
     }
+
+    DrawRectangleRec(btnStart, COLOR_BTN);
+    DrawText("EMPEZAR",
+        btnStart.x + (btnStart.width - MeasureText("EMPEZAR", 20)) / 2,
+        btnStart.y + (btnStart.height - 20) / 2,
+        20, COLOR_TEXT);
 
     DrawRectangleRec(btnBack, COLOR_BTN);
     DrawText("ATRAS",
@@ -213,3 +227,50 @@ void draw_round(tLista *players)
         btnBack.y + (btnBack.height - 20) / 2,
         20, COLOR_TEXT);
 }
+
+void draw_game_over(tScore *sc)
+{
+    const int offsetX = screenWidth / 2 - (CELL_SIZE * 3) / 2;
+    const int offsetY = screenHeight / 2 - (CELL_SIZE * 3) / 2;
+    int fontSize = 80;
+    int textWidth = MeasureText("X", fontSize);
+    int textHeight = fontSize;
+    char buffer[MAX_BUFF_SIZE];
+    if(sc->result == DRAW)
+        memcpy(buffer, "Empate",strlen("Empate"));
+    else if(sc->result == HUMAN_PLAY)
+        sprintf(buffer,"Gano: %s",sc->player.name);
+    else
+        memcpy(buffer, "PC",strlen("PC"));
+    // Tablero y piezas
+    for (int row = 0; row < 3; row++)
+    {
+        for (int col = 0; col < 3; col++)
+        {
+            Rectangle cell = { offsetX + col * CELL_SIZE, offsetY + row * CELL_SIZE, CELL_SIZE, CELL_SIZE };
+            grid[row][col] = cell;
+
+            DrawRectangleRec(cell, COLOR_BOARD);
+            DrawRectangleLinesEx(cell, 2, COLOR_TEXT);
+
+            if (board[row][col] == XSYM)
+                DrawText("X", cell.x + (CELL_SIZE - textWidth) / 2,
+                              cell.y + (CELL_SIZE - textHeight) / 2,
+                              fontSize, COLOR_X);
+            else if (board[row][col] == OSYM)
+                DrawText("O", cell.x + (CELL_SIZE - textWidth) / 2,
+                              cell.y + (CELL_SIZE - textHeight) / 2,
+                              fontSize, COLOR_O);
+        }
+    }
+
+    // Botón SIGUIENTE
+    btnNext = (Rectangle){ screenWidth / 2 - 100, offsetY + CELL_SIZE * 3 + 40, 200, 50 };
+    DrawRectangleRec(btnNext, COLOR_BTN);
+    DrawText("SIGUIENTE",
+             btnNext.x + (btnNext.width - MeasureText("SIGUIENTE", 20)) / 2,
+             btnNext.y + (btnNext.height - 20) / 2,
+             20, COLOR_TEXT);
+}
+
+

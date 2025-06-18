@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1750192477 source:c:\users\olima\onedrive\documents\algoritmos_2025\tp\prueba_final\tateti_matriz_f\tateti_matriz_f.c
+	"tateti_matriz_F.h"
+
+1750191630 c:\users\olima\onedrive\documents\algoritmos_2025\tp\prueba_final\tateti_matriz_f\tateti_matriz_f.h
+	"../lista/lista.h"
+	<stdio.h>
+	<time.h>
+	<math.h>
+
+1750185788 c:\users\olima\onedrive\documents\algoritmos_2025\tp\prueba_final\lista\lista.h
+	<stdlib.h>
+	<string.h>
+

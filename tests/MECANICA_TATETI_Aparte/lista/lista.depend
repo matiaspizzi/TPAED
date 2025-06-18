@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1749680970 source:c:\users\olima\onedrive\documents\algoritmos_2025\tp\tp_v2\lista\lista.c
+	"lista.h"
+
+1749680981 c:\users\olima\onedrive\documents\algoritmos_2025\tp\tp_v2\lista\lista.h
+	<stdlib.h>
+	<string.h>
+
+1750160085 source:c:\users\olima\onedrive\documents\algoritmos_2025\tp\prueba_final\lista\lista.c
+	"lista.h"
+
+1750185788 c:\users\olima\onedrive\documents\algoritmos_2025\tp\prueba_final\lista\lista.h
+	<stdlib.h>
+	<string.h>
+
+1750210763 source:d:\repos\tpaed\tests\mecanica_tateti_aparte\lista\lista.c
+	"lista.h"
+
+1750210763 d:\repos\tpaed\tests\mecanica_tateti_aparte\lista\lista.h
+	<stdlib.h>
+	<string.h>
+
