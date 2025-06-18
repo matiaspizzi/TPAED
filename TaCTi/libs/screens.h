@@ -6,12 +6,8 @@
 #define SCREENS_H_INCLUDED
 
 #include "raylib.h"
-#include "../parameters.h"
-#include "TDA_Lista.h"
-#include "cola.h"
 #include "data.h"
 
-#define     MAX_PLAYER_NAME     30
 
 #define     COLOR_TEXT      WHITE
 #define     COLOR_BG        DARKGREEN
@@ -20,17 +16,19 @@
 #define     COLOR_X         RED
 #define     COLOR_O         BLUE
 
+#define     CELL_SIZE       120
 
 // Listamos las diferentes pantallas que pueden aparecer.
 typedef enum
 {
     MENU,
     ENTER_PLAYERS,
-    BOARD,
-    GAME_OVER,
-    RANKING,
     ROUND,
     PLAYERS_READY,
+    BOARD,
+    GAME_OVER,
+    END_SAVE,
+    RANKING,
     EXIT
 } screens;
 
@@ -39,14 +37,16 @@ extern const char *screens_str[];
 extern const int screenWidth;
 extern const int screenHeight;
 
+
 void    draw_menu               (void);
+void    clear_ranking_cache     (void);
 void    draw_enter_players      (tSession *s);
 void    draw_board              (tSession *s);
-void    draw_game_over            ();
 void    draw_ranking            (tSession *s);
 void    draw_player_ready       (tSession *s);
 void    draw_round              (tSession *s);
-void    clear_ranking_cache     ();
+void    draw_game_over          ();
+
 
 extern Rectangle btnPlay;
 extern Rectangle btnRanking;

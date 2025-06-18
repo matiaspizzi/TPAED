@@ -62,6 +62,7 @@ int human_playing(int board[3][3], tPlays *p, int i, int j)
     return PC_PLAY;
 }
 
+
 int pc_playing(int board[3][3], tPlays *p)
 {
     int sacarHumano;
@@ -192,6 +193,8 @@ int randomPosition(int  board[3][3], tLista* p_pc, int symbol)
     return 0;
 }
 
+
+
 int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
 {
     int valor;
@@ -221,28 +224,146 @@ int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
 
 
 
-int save_score(tSession *s, int board[3][3],int res)
+int check_tateti_board(int board[3][3], int jugador)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (board[i][0] == jugador && board[i][1] == jugador && board[i][2] == jugador)
+            return 1;
+        if (board[0][i] == jugador && board[1][i] == jugador && board[2][i] == jugador)
+            return 1;
+    }
+    if (board[0][0] == jugador && board[1][1] == jugador && board[2][2] == jugador)
+        return 1;
+    if (board[0][2] == jugador && board[1][1] == jugador && board[2][0] == jugador)
+        return 1;
+
+    return 0;
+}
+
+void finish_match(tPlays *p)
+{
+    vaciarLista(&p->human);
+    vaciarLista(&p->pc);
+
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            board[i][j] = 0;
+
+    p->pc_symbol    = 0;
+    p->pc_symbol    = 0;
+    p->human_symbol = 0;
+    p->winner       = 0;
+
+}
+
+int list_score(tSession *s, tPlays *p)
 {
     tScore score;
-    if(!sacarDeCola(&s->players_queue, &score.player, sizeof(tPlayer)))
+
+    if (!sacarDeCola(&s->players_queue, &score.player, sizeof(tPlayer)))
         return ERROR;
-    if(res == DRAW)
+
+    // Asigna puntaje
+    if (p->winner == DRAW)
     {
-        score.player.points += 2;
+        score.player.points += 1;  // Empate: por ejemplo 1 punto
     }
-    else if(res == HUMAN_WIN)
+    else if (p->winner == HUMAN_WIN)
     {
-        score.player.points += 3;
+        score.player.points += 2;  // Victoria
     }
     else
     {
-        score.player.points -= 1;
+        score.player.points += 0;  // Derrota
     }
 
-    score.result = res;
-    memcpy(score.board,board,sizeof(board[3][3]));
+    // Copia el tablero final
+    memcpy(score.board, board, sizeof(score.board));
+
+    // Guarda el resultado
+    score.result = p->winner;
+
+    if (!ponerAlFinal(&s->score_list, &score, sizeof(tScore)))
+        return ERROR;
 
     return OK;
+}
 
+
+void save_game_report_list(tLista *score_list)
+{
+    if (score_list == NULL || *score_list == NULL)
+    {
+        printf("La lista de puntajes está vacía.\n");
+        return;
+    }
+
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+
+    char filename[MAX_FILENAME_LENGTH];
+    snprintf(filename, sizeof(filename),
+            "informe-juego_%04d-%02d-%02d-%02d-%02d-%02d.txt",
+            t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+            t->tm_hour, t->tm_min, t->tm_sec);
+
+    FILE *file = fopen(filename, "w");
+    if (file == NULL)
+    {
+        perror("Error al crear archivo de informe");
+        return;
+    }
+
+    fprintf(file, "INFORME DE JUEGO (MULTIPLE)\n");
+    fprintf(file, "--------------------------\n\n");
+
+    tNodo *actual = *score_list;
+
+    while (actual != NULL)
+    {
+        tScore *score = (tScore *)actual->info;
+
+        fprintf(file, "Jugador: %s\n", score->player.name);
+        fprintf(file, "Puntos: %d\n", score->player.points);
+
+        const char *resultadoStr;
+        if (score->result == HUMAN_WIN)
+            resultadoStr = "VICTORIA";
+        else if (score->result == PC_WIN)
+            resultadoStr = "DERROTA";
+        else
+            resultadoStr = "EMPATE";
+
+        fprintf(file, "Resultado: %s\n", resultadoStr);
+        fprintf(file, "ESTADO DEL TABLERO:\n");
+        fprintf(file, "-------------\n");
+
+        for (int fila = 0; fila < 3; fila++)
+        {
+            fprintf(file, "|");
+            for (int col = 0; col < 3; col++)
+            {
+                char simbolo;
+                if (score->board[fila][col] == XSYM)
+                    simbolo = 'X';
+                else if (score->board[fila][col] == OSYM)
+                    simbolo = 'O';
+                else
+                    simbolo = ' ';
+
+                fprintf(file, " %c |", simbolo);
+            }
+            fprintf(file, "\n");
+            if (fila < 2)
+                fprintf(file, "---+---+---\n");
+        }
+        fprintf(file, "-------------\n\n");
+
+        actual = actual->sig;
+    }
+
+    fclose(file);
+    printf("Informe guardado como: %s\n", filename);
 }
 

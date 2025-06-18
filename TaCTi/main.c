@@ -1,16 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "parameters.h"
-
 #include "libs/screens.h"
 #include "libs/interactions.h"
-
 #include "libs/data.h"
-
-#include "libs/TDA_Lista.h"
-#include "libs/cola.h"
-
 
 int main()
 {
@@ -81,6 +74,11 @@ int main()
                 break;
 
             }
+            case END_SAVE:
+            {
+                currentScreen = update_end_save(&session,&plays);
+                break;
+            }
             case RANKING:
             {
                 draw_ranking(&session);
@@ -97,13 +95,5 @@ int main()
         EndDrawing();
     }
     CloseWindow();
-
-    printf("Jugadores ingresados: \n");
-    recorrerMostrarLista(&session.players_list,MAX_BUFF_SIZE,printString);
-    /*while(!colaVacia(&gameTurn))
-    {
-        sacarDeCola(&gameTurn, buffer, MAX_BUFF_SIZE);
-        printf("%s\n", buffer);
-    }*/
     return 0;
 }

@@ -11,6 +11,7 @@ void init_session(tSession *s)
     s->input.name[0] = '\0';
     crearLista(&s->players_list);
     crearCola(&s->players_queue);
+    //crearLista(&s->score_list)
     s->qtyPlayers = 0;
 }
 
@@ -85,3 +86,9 @@ int fifty_fifty()
     return (rand() % 2) + 1;  // Devuelve 1 o 2
 }
 
+/*int list_score(tSession *s, tScore *sc)
+{
+    if(ponerAlFinal(&s,&sc,sizeof(tScore)))
+        return ERROR;
+    return OK
+}*/

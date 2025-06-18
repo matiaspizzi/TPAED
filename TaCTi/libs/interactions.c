@@ -4,6 +4,7 @@
 #include "interactions.h"
 #include "data.h"
 #include "game.h"
+
 float errorTimer;
 int showError = 0;
 
@@ -144,10 +145,16 @@ int update_player_ready(tSession *s, tPlays *p)
 {
    Vector2 mouse = GetMousePosition();
 
+    if(colaVacia(&s->players_queue))
+        return END_SAVE;
+
     if (CheckCollisionPointRec(mouse, btnSurrender) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        drop_session(s);
-        return MENU;
+        finish_match(p);
+        if(!colaVacia(&s->players_queue))
+            return PLAYERS_READY;
+        else
+            return MENU;
     }
 
     if (CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
@@ -182,13 +189,13 @@ int update_board(tSession *s, tPlays *p)
                             case DRAW:
                             {
                                 printf("Empate\n");
-                                save_score(s,board,DRAW);
+                                p->winner = DRAW;
                                 return GAME_OVER;
                             }
                             case HUMAN_WIN:
                             {
                                 printf("Gana usuario\n");
-                                save_score(s,board,HUMAN_WIN);
+                                p->winner = HUMAN_WIN;
                                 return GAME_OVER;
                             }
                             case PC_PLAY:
@@ -207,19 +214,18 @@ int update_board(tSession *s, tPlays *p)
     {
         // PC juega (intenta ganar / bloquear / jugada estratégica)
         res = pc_playing(board,p);
-        //board[row][col] = p->pc_symbol;
         switch(res)
         {
             case DRAW:
             {
                 printf("Empate\n");
-                save_score(s,board,DRAW);
+                p->winner = DRAW;
                 return GAME_OVER;
             }
             case PC_WIN:
             {
                 printf("Gana PC\n");
-                save_score(s,board,PC_WIN);
+                p->winner = PC_WIN;
                 return GAME_OVER;
             }
             case HUMAN_PLAY:
@@ -232,19 +238,29 @@ int update_board(tSession *s, tPlays *p)
     return BOARD;
 }
 
-int update_game_over()
+int update_game_over(tSession *s, tPlays *p)
 {
     Vector2 mouse = GetMousePosition();
 
     if (CheckCollisionPointRec(mouse, btnNext) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         printf("--> CONTINUAR\n");
-
-       //return MENU;
+        list_score(s, p);
+        finish_match(p);
+        return PLAYERS_READY;
     }
 
     // Mientras no haga clic, sigue en el estado de game over
     return GAME_OVER;
+}
+
+int update_end_save(tSession *s, tPlays *p)
+{
+    save_game_report_list(&s->score_list);
+
+    vaciarLista(&s->score_list);  // Si querés vaciar después de guardar
+
+    return MENU;
 }
 
 
