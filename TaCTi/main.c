@@ -88,7 +88,6 @@ int main()
             }
             case EXIT:
             {
-
                 break;
             }
         }

@@ -23,8 +23,8 @@ int update_menu()
     }
     if (CheckCollisionPointRec(mouse, btnRanking) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        //printf("--> VER RANKING\n");
-        //return RANKING;
+        printf("--> VER RANKING\n");
+        return RANKING;
     }
     return MENU;
 }
