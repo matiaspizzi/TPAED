@@ -10,7 +10,7 @@
 
 #define isVALIDCHAR(c) (((c) >= 'A' && (c) <= 'Z') || ((c) >= 'a' && (c) <= 'z') || ((c) >= '0' && (c) <= '9') || (c) == ' ')
 
-#define     MAX_BUFF_SIZE       30
+#define     MAX_BUFF_SIZE       100
 #define     MAX_PLAYER_NAME     30
 
 #define     OK      1
@@ -44,12 +44,19 @@ typedef struct
     tLista  players_list;
     tCola   players_queue;
     int     qtyPlayers;
+    int     curr_symbol;
 }tSession;
 
 void init_session           (tSession *s);
+void drop_session           (tSession *s);
 int  reset_input            (tInput *input);
-
+int queue_player            (tSession *s);
 int list_player             (tSession *s);
-void printString        (const void *data);
+void printString            (const void *data);
+int get_player              (tPlayer *p, tSession *s);
+int fifty_fifty();
+
+
+
 #endif // DATA_H_INCLUDED
 
