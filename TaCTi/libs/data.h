@@ -40,7 +40,7 @@ typedef struct
 
 
 
-
+void save_game_report(char name[MAX_PLAYER_NAME], int points, int board[3][3], int winner);
 
 int reset_input         (tInput *intput);
 int clear_input         (tInput *input);
