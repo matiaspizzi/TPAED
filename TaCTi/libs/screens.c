@@ -177,6 +177,7 @@ void draw_ranking(tSession *s)
             i++;
         }
     }
+    if (cached_players_count == 0) DrawText("Sin datos", 100, 100 + i*35, 30, COLOR_TEXT);
 
 
     DrawRectangleRec(btnBack, COLOR_BTN);
