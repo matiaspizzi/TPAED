@@ -44,8 +44,20 @@ typedef struct
     tLista  players_list;
     tCola   players_queue;
     int     qtyPlayers;
-    int     curr_symbol;
+
 }tSession;
+
+
+typedef struct
+{
+    tLista  human;
+    tLista  pc;
+    int     curr_symbol;
+    int     human_symbol;
+    int     pc_symbol;
+}tPlays;
+
+
 
 void init_session           (tSession *s);
 void drop_session           (tSession *s);

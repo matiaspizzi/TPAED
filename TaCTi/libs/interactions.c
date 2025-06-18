@@ -3,7 +3,7 @@
 #include "screens.h"
 #include "interactions.h"
 #include "data.h"
-
+#include "game.h"
 float errorTimer;
 int showError = 0;
 
@@ -140,7 +140,7 @@ int update_ranking(tSession *s)
     return RANKING;
 }
 
-int update_player_ready(tSession *s)
+int update_player_ready(tSession *s, tPlays *p)
 {
    Vector2 mouse = GetMousePosition();
 
@@ -152,37 +152,61 @@ int update_player_ready(tSession *s)
 
     if (CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        s->curr_symbol = fifty_fifty();
+        init_match(p);
         return BOARD;
     }
     return PLAYERS_READY;
 }
 
 
-int update_board(tSession *s)
+int update_board(tSession *s, tPlays *p)
 {
     Vector2 mouse = GetMousePosition();
-
-    for (int row = 0; row < 3; row++)
+    int res = 0;
+    // Si le toca al humano
+    if (p->curr_symbol == p->human_symbol)
     {
-        for (int col = 0; col < 3; col++)
+        for (int row = 0; row < 3; row++)
         {
-            Rectangle cell = grid[row][col];
-
-            if (CheckCollisionPointRec(mouse, cell) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            for (int col = 0; col < 3; col++)
             {
-                if (board[row][col] == 0)
+                Rectangle cell = grid[row][col];
+                if (CheckCollisionPointRec(mouse, cell) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
                 {
-                    board[row][col] = s->curr_symbol;
-                    s->curr_symbol = (s->curr_symbol == 1) ? 2 : 1;
+                    if (board[row][col] == 0)
+                    {
+                        board[row][col] = p->human_symbol;  // humano jugó
+                        p->curr_symbol = p->pc_symbol;      // turno PC
+                        return BOARD;
+                    }
                 }
-
-                // Podrías poner aquí un return distinto si querés detectar final de ronda
-                return BOARD;
             }
+        }
+    }
+    else // turno de la PC
+    {
+        res = pc_playing(board,p);
+
+        if (res == PC_WIN)
+        {
+            printf("Gana la PC\n");
+            WaitTime(3.0f);  // o un bucle que espere 3 segundos, depende de tu entorno
+            return MENU;
+        }
+        else if (res == DRAW)
+        {
+            printf("Empate\n");
+            WaitTime(3.0f);
+            return MENU;
+        }
+
+        else
+        {
+            p->curr_symbol = p->human_symbol; // vuelve el turno al humano
         }
     }
 
     return BOARD;
 }
+
 

@@ -3,6 +3,8 @@
 #include "raylib.h"
 #include "screens.h"
 #include "data.h"
+
+#include "game.h"
 #include "requests.h"
 
 #define CELL_SIZE 120
@@ -121,11 +123,11 @@ void draw_board(tSession *s)
             DrawRectangleLinesEx(cell, 2, COLOR_TEXT);
 
             // Dibujar X / O
-            if (board[row][col] == 1)
+            if (board[row][col] == XSYM)
                 DrawText("X", cell.x + (CELL_SIZE - textWidth) / 2,
                     cell.y + (CELL_SIZE - textHeight) / 2,
                     fontSize, COLOR_X);
-            else if (board[row][col] == 2)
+            else if (board[row][col] == OSYM)
                 DrawText("O", cell.x + (CELL_SIZE - textWidth) / 2,
                     cell.y + (CELL_SIZE - textHeight) / 2,
                     fontSize, COLOR_O);

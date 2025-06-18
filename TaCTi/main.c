@@ -23,6 +23,8 @@ int main()
     tSession session;
     init_session(&session);
 
+    tPlays plays;
+
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
 
@@ -41,6 +43,7 @@ int main()
                 //  Se despliega el menu.
                 draw_menu();
                 currentScreen = update_menu();
+
                 break;
             }
             case ENTER_PLAYERS:
@@ -48,6 +51,7 @@ int main()
                 //  Se reciben los nombres de jugadores y enlistan.
                 draw_enter_players(&session);
                 currentScreen = update_enter_players(&session);
+
                 break;
             }
             case ROUND:
@@ -55,27 +59,32 @@ int main()
                 //  Se otorgan los turnos para cada jugador.
                 draw_round(&session);
                 currentScreen = update_round(&session);
+
                 break;
             }
             case PLAYERS_READY:
             {
                 draw_player_ready(&session);
+                currentScreen = update_player_ready(&session, &plays);
 
                 break;
             }
             case BOARD:
             {
                 draw_board(&session);
+                currentScreen = update_board(&session,&plays);
                 break;
             }
             case RANKING:
             {
                 draw_ranking(&session);
                 currentScreen = update_ranking(&session);
+
                 break;
             }
             case EXIT:
             {
+
                 break;
             }
         }
