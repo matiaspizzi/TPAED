@@ -7,8 +7,6 @@
 #include "game.h"
 #include "requests.h"
 
-#define CELL_SIZE 120
-
 const int screenWidth = 800;
 const int screenHeight = 600;
 
@@ -182,22 +180,25 @@ void draw_player_ready(tSession *s)
 
     char buffer[MAX_BUFF_SIZE];
     tPlayer p;
-    get_player(&p, s);
-    sprintf(buffer, "%s estas listo?", p.name);
 
-    DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
+    if(get_player(&p, s))
+    {
+        sprintf(buffer, "%s estas listo?", p.name);
 
-    DrawRectangleRec(btnStart, COLOR_BTN);
-    DrawText("COMENZAR",
-        btnStart.x + (btnStart.width - MeasureText("COMENZAR", 20)) / 2,
-        btnStart.y + (btnStart.height - 20) / 2,
-        20, COLOR_TEXT);
+        DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
 
-    DrawRectangleRec(btnSurrender, COLOR_BTN);
-    DrawText("RENDIRSE",
-        btnSurrender.x + (btnSurrender.width - MeasureText("RENDIRSE", 20)) / 2,
-        btnSurrender.y + (btnSurrender.height - 20) / 2,
-        20, COLOR_TEXT);
+        DrawRectangleRec(btnStart, COLOR_BTN);
+        DrawText("COMENZAR",
+            btnStart.x + (btnStart.width - MeasureText("COMENZAR", 20)) / 2,
+            btnStart.y + (btnStart.height - 20) / 2,
+            20, COLOR_TEXT);
+
+        DrawRectangleRec(btnSurrender, COLOR_BTN);
+        DrawText("RENDIRSE",
+            btnSurrender.x + (btnSurrender.width - MeasureText("RENDIRSE", 20)) / 2,
+            btnSurrender.y + (btnSurrender.height - 20) / 2,
+            20, COLOR_TEXT);
+    }
 }
 
 void draw_round(tSession *s)
@@ -238,10 +239,12 @@ void draw_game_over(tScore *sc)
     char buffer[MAX_BUFF_SIZE];
     if(sc->result == DRAW)
         memcpy(buffer, "Empate",strlen("Empate"));
-    else if(sc->result == HUMAN_PLAY)
+    else if(sc->result == HUMAN_WIN)
         sprintf(buffer,"Gano: %s",sc->player.name);
     else
-        memcpy(buffer, "PC",strlen("PC"));
+        memcpy(buffer, "Gano PC",strlen("Gano PC"));
+
+    DrawText(buffer, screenWidth/2 - MeasureText(buffer, 30)/2, 30, 30, COLOR_TEXT);
     // Tablero y piezas
     for (int row = 0; row < 3; row++)
     {

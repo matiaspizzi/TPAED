@@ -8,10 +8,13 @@
 #include "TDA_Lista.h"
 #include "cola.h"
 
+
 #define isVALIDCHAR(c) (((c) >= 'A' && (c) <= 'Z') || ((c) >= 'a' && (c) <= 'z') || ((c) >= '0' && (c) <= '9') || (c) == ' ')
 
 #define     MAX_BUFF_SIZE       100
 #define     MAX_PLAYER_NAME     30
+#define     MAX_DATE_LENGTH     32
+#define     MAX_FILENAME_LENGTH 100
 
 #define     OK      1
 #define     ERROR   0
@@ -42,24 +45,25 @@ typedef struct
 {
     tInput  input;
     tLista  players_list;
+    tLista  score_list;
     tCola   players_queue;
     int     qtyPlayers;
 }tSession;
 
 
 
+void    init_session           (tSession *s);
+void    drop_session           (tSession *s);
 
+int     reset_input            (tInput *input);
 
+int     list_player             (tSession *s);
+int     queue_player            (tSession *s);
 
+int     get_player              (tPlayer *p, tSession *s);
 
-void init_session           (tSession *s);
-void drop_session           (tSession *s);
-int  reset_input            (tInput *input);
-int queue_player            (tSession *s);
-int list_player             (tSession *s);
-void printString            (const void *data);
-int get_player              (tPlayer *p, tSession *s);
-int fifty_fifty();
+void    printString            (const void *data);
+int     fifty_fifty             ();
 
 
 
