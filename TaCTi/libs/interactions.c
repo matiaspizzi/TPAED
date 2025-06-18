@@ -158,7 +158,6 @@ int update_player_ready(tSession *s, tPlays *p)
     return PLAYERS_READY;
 }
 
-
 int update_board(tSession *s, tPlays *p)
 {
     Vector2 mouse = GetMousePosition();
@@ -183,21 +182,21 @@ int update_board(tSession *s, tPlays *p)
                             case DRAW:
                             {
                                 printf("Empate\n");
+                                save_score(s,board,DRAW);
                                 return GAME_OVER;
-                                break;
                             }
                             case HUMAN_WIN:
                             {
                                 printf("Gana usuario\n");
+                                save_score(s,board,HUMAN_WIN);
                                 return GAME_OVER;
                             }
                             case PC_PLAY:
                             {
                                 p->curr_symbol = p->pc_symbol;
-                                break;
+                                return BOARD;
                             }
                         }
-                        return BOARD;
                     }
                 }
             }
@@ -214,18 +213,19 @@ int update_board(tSession *s, tPlays *p)
             case DRAW:
             {
                 printf("Empate\n");
+                save_score(s,board,DRAW);
                 return GAME_OVER;
-                break;
             }
             case PC_WIN:
             {
                 printf("Gana PC\n");
+                save_score(s,board,PC_WIN);
                 return GAME_OVER;
             }
             case HUMAN_PLAY:
             {
                 p->curr_symbol = p->human_symbol;
-                break;
+                return BOARD;
             }
         }
     }
@@ -234,12 +234,16 @@ int update_board(tSession *s, tPlays *p)
 
 int update_game_over()
 {
-   /* Vector2 mouse = GetMousePosition();
+    Vector2 mouse = GetMousePosition();
+
     if (CheckCollisionPointRec(mouse, btnNext) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        printf("--> GUARDAR\n");
-        return MENU;
-    }*/
+        printf("--> CONTINUAR\n");
+
+       //return MENU;
+    }
+
+    // Mientras no haga clic, sigue en el estado de game over
     return GAME_OVER;
 }
 

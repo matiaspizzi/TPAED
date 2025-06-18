@@ -44,18 +44,11 @@ typedef struct
     tLista  players_list;
     tCola   players_queue;
     int     qtyPlayers;
-    tLista  score_list;
 }tSession;
 
 
-typedef struct
-{
-    tLista  human;
-    tLista  pc;
-    int     curr_symbol;
-    int     human_symbol;
-    int     pc_symbol;
-}tPlays;
+
+
 
 
 

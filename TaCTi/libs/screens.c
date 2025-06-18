@@ -228,23 +228,21 @@ void draw_round(tSession *s)
         20, COLOR_TEXT);
 }
 
-void draw_game_over(tSession *s)
+void draw_game_over(tScore *sc)
 {
-    //  Se ubica el tablero en el centro de la ventana.
-    const int offsetX = screenWidth/2 - (CELL_SIZE * 3) / 2;
-    const int offsetY = screenHeight/2 - (CELL_SIZE * 3) / 2;
+    const int offsetX = screenWidth / 2 - (CELL_SIZE * 3) / 2;
+    const int offsetY = screenHeight / 2 - (CELL_SIZE * 3) / 2;
     int fontSize = 80;
     int textWidth = MeasureText("X", fontSize);
-    int textHeight = fontSize; // Raylib no tiene MeasureTextHeight, pero se asume aprox = fontSize
-
+    int textHeight = fontSize;
     char buffer[MAX_BUFF_SIZE];
-    tPlayer p;
-    get_player(&p, s);
-    sprintf(buffer, "Turno de: %s", p.name);
-
-    /// Visuales   -----------------------------------------------------------------------------------------
-    DrawText(buffer, screenWidth/2 - MeasureText(buffer, 30)/2, 50, 30, COLOR_TEXT);
-    // Dibujar las celdas y guardar las posiciones
+    if(sc->result == DRAW)
+        memcpy(buffer, "Empate",strlen("Empate"));
+    else if(sc->result == HUMAN_PLAY)
+        sprintf(buffer,"Gano: %s",sc->player.name);
+    else
+        memcpy(buffer, "PC",strlen("PC"));
+    // Tablero y piezas
     for (int row = 0; row < 3; row++)
     {
         for (int col = 0; col < 3; col++)
@@ -255,22 +253,24 @@ void draw_game_over(tSession *s)
             DrawRectangleRec(cell, COLOR_BOARD);
             DrawRectangleLinesEx(cell, 2, COLOR_TEXT);
 
-            // Dibujar X / O
             if (board[row][col] == XSYM)
                 DrawText("X", cell.x + (CELL_SIZE - textWidth) / 2,
-                    cell.y + (CELL_SIZE - textHeight) / 2,
-                    fontSize, COLOR_X);
+                              cell.y + (CELL_SIZE - textHeight) / 2,
+                              fontSize, COLOR_X);
             else if (board[row][col] == OSYM)
                 DrawText("O", cell.x + (CELL_SIZE - textWidth) / 2,
-                    cell.y + (CELL_SIZE - textHeight) / 2,
-                    fontSize, COLOR_O);
+                              cell.y + (CELL_SIZE - textHeight) / 2,
+                              fontSize, COLOR_O);
         }
     }
 
+    // Botón SIGUIENTE
+    btnNext = (Rectangle){ screenWidth / 2 - 100, offsetY + CELL_SIZE * 3 + 40, 200, 50 };
     DrawRectangleRec(btnNext, COLOR_BTN);
     DrawText("SIGUIENTE",
-        btnBack.x + (btnBack.width - MeasureText("SIGUIENTE", 20)) / 2,
-        btnBack.y + (btnBack.height - 20) / 2,
-        20, COLOR_TEXT);
+             btnNext.x + (btnNext.width - MeasureText("SIGUIENTE", 20)) / 2,
+             btnNext.y + (btnNext.height - 20) / 2,
+             20, COLOR_TEXT);
 }
+
 

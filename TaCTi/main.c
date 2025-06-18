@@ -66,7 +66,6 @@ int main()
             {
                 draw_player_ready(&session);
                 currentScreen = update_player_ready(&session, &plays);
-
                 break;
             }
             case BOARD:
@@ -74,6 +73,13 @@ int main()
                 draw_board(&session);
                 currentScreen = update_board(&session,&plays);
                 break;
+            }
+            case GAME_OVER:
+            {
+                draw_game_over(&session);
+                currentScreen = update_game_over(&session,&plays);
+                break;
+
             }
             case RANKING:
             {

@@ -221,3 +221,28 @@ int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
 
 
 
+int save_score(tSession *s, int board[3][3],int res)
+{
+    tScore score;
+    if(!sacarDeCola(&s->players_queue, &score.player, sizeof(tPlayer)))
+        return ERROR;
+    if(res == DRAW)
+    {
+        score.player.points += 2;
+    }
+    else if(res == HUMAN_WIN)
+    {
+        score.player.points += 3;
+    }
+    else
+    {
+        score.player.points -= 1;
+    }
+
+    score.result = res;
+    memcpy(score.board,board,sizeof(board[3][3]));
+
+    return OK;
+
+}
+
