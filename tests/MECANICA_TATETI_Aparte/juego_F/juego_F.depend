@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1750189922 source:c:\users\olima\onedrive\documents\algoritmos_2025\tp\prueba_final\juego_f\main.c
+	<stdio.h>
+	<stdlib.h>
+	"../lista/lista.h"
+	"../tateti_matriz_F/tateti_matriz_F.h"
+
+1750185788 c:\users\olima\onedrive\documents\algoritmos_2025\tp\prueba_final\lista\lista.h
+	<stdlib.h>
+	<string.h>
+
+1750197239 c:\users\olima\onedrive\documents\algoritmos_2025\tp\prueba_final\tateti_matriz_f\tateti_matriz_f.h
+	"../lista/lista.h"
+	<stdio.h>
+	<time.h>
+	<math.h>
+
+1750210763 source:d:\repos\tpaed\tests\mecanica_tateti_aparte\juego_f\main.c
+	<stdio.h>
+	<stdlib.h>
+	"../lista/lista.h"
+	"../tateti_matriz_F/tateti_matriz_F.h"
+
+1750210763 d:\repos\tpaed\tests\mecanica_tateti_aparte\lista\lista.h
+	<stdlib.h>
+	<string.h>
+
+1750210763 d:\repos\tpaed\tests\mecanica_tateti_aparte\tateti_matriz_f\tateti_matriz_f.h
+	"../lista/lista.h"
+	<stdio.h>
+	<time.h>
+	<math.h>
+

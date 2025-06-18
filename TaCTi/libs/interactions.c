@@ -3,7 +3,7 @@
 #include "screens.h"
 #include "interactions.h"
 #include "data.h"
-
+#include "game.h"
 float errorTimer;
 int showError = 0;
 
@@ -22,8 +22,8 @@ int update_menu()
     }
     if (CheckCollisionPointRec(mouse, btnRanking) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        printf("--> VER RANKING\n");
-        return RANKING;
+        //printf("--> VER RANKING\n");
+        //return RANKING;
     }
     return MENU;
 }
@@ -56,18 +56,18 @@ int update_enter_players(tSession *s)
     //  Boton atras --> Deshace lo ingresado y vuelve al menú.
     if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        reset_input(&s->input);
-        vaciarLista(&s->players_list); ///-----< cambiar
+        printf("-> ATRAS\n");
+        drop_session(s);
         return MENU;
     }
 
     //  Boton otro jugador --> Agrega al jugador a la lista y permite seguir ingresando más.
     if (CheckCollisionPointRec(mouse, btnNewPlayer) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        if (s->input.keyCount > 3)
+        if (list_player(s))
         {
-            list_player(s);
             reset_input(&s->input);
+            s->qtyPlayers ++;
         }
         else
         {
@@ -79,24 +79,30 @@ int update_enter_players(tSession *s)
     //  Boton comenzar --> Agrega al jugador a la lista y  procede a otorgar los turnos.
     if (CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        if (s->input.keyCount > 3 || !listaVacia(&s->players_list))
-        {
-            list_player(s);
+            if (s->input.keyCount > 0 && s->input.name[0] != '\0')
+            {
+                if (list_player(s))
+                    s->qtyPlayers++;
+                else
+                {
+                    errorTimer = 2.0f;
+                    showError = 1;
+                }
+            }
+            else if(s->qtyPlayers < 1)
+            {
+                errorTimer = 2.0f;
+                showError = 1;
+                return ENTER_PLAYERS;
+            }
             reset_input(&s->input);
+            queue_player(s);
             return ROUND;
-        }
-        else
-        {
-            errorTimer = 2.0f;
-            showError = 1;
-        }
     }
-
-
     if (showError)
     {
-        DrawText("Ingrese minimo 1 jugador",
-                 screenWidth/2 - MeasureText("Ingrese minimo 1 jugador", 30)/2, 50, 30, RED);
+        DrawText("Error",
+                 screenWidth/2 - MeasureText("Error", 30)/2, 50, 30, RED);
         errorTimer -= GetFrameTime();
         if (errorTimer <= 0)
         {
@@ -106,14 +112,18 @@ int update_enter_players(tSession *s)
     return ENTER_PLAYERS;
 }
 
-
 int update_round(tSession *s)
 {
     Vector2 mouse = GetMousePosition();
     //  Boton atras.
     if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        return MENU;
+        return ENTER_PLAYERS;
+    }
+    if(CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        vaciarLista(&s->players_list);
+        return PLAYERS_READY;
     }
     return ROUND;
 }
@@ -129,4 +139,113 @@ int update_ranking(tSession *s)
 
     return RANKING;
 }
+
+int update_player_ready(tSession *s, tPlays *p)
+{
+   Vector2 mouse = GetMousePosition();
+
+    if (CheckCollisionPointRec(mouse, btnSurrender) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        drop_session(s);
+        return MENU;
+    }
+
+    if (CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        init_match(p);
+        return BOARD;
+    }
+    return PLAYERS_READY;
+}
+
+int update_board(tSession *s, tPlays *p)
+{
+    Vector2 mouse = GetMousePosition();
+
+    int res = 0;
+    int row,col;
+    // TURNO HUMANO
+    if (p->curr_symbol == p->human_symbol)
+    {
+        for (row = 0; row < 3; row++)
+        {
+            for (col = 0; col < 3; col++)
+            {
+                Rectangle cell = grid[row][col];
+                if (CheckCollisionPointRec(mouse, cell) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+                {
+                    if (board[row][col] == 0)
+                    {
+                        res = human_playing(board, p,row,col);
+                        switch(res)
+                        {
+                            case DRAW:
+                            {
+                                printf("Empate\n");
+                                save_score(s,board,DRAW);
+                                return GAME_OVER;
+                            }
+                            case HUMAN_WIN:
+                            {
+                                printf("Gana usuario\n");
+                                save_score(s,board,HUMAN_WIN);
+                                return GAME_OVER;
+                            }
+                            case PC_PLAY:
+                            {
+                                p->curr_symbol = p->pc_symbol;
+                                return BOARD;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // TURNO PC
+    else
+    {
+        // PC juega (intenta ganar / bloquear / jugada estratégica)
+        res = pc_playing(board,p);
+        //board[row][col] = p->pc_symbol;
+        switch(res)
+        {
+            case DRAW:
+            {
+                printf("Empate\n");
+                save_score(s,board,DRAW);
+                return GAME_OVER;
+            }
+            case PC_WIN:
+            {
+                printf("Gana PC\n");
+                save_score(s,board,PC_WIN);
+                return GAME_OVER;
+            }
+            case HUMAN_PLAY:
+            {
+                p->curr_symbol = p->human_symbol;
+                return BOARD;
+            }
+        }
+    }
+    return BOARD;
+}
+
+int update_game_over()
+{
+    Vector2 mouse = GetMousePosition();
+
+    if (CheckCollisionPointRec(mouse, btnNext) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        printf("--> CONTINUAR\n");
+
+       //return MENU;
+    }
+
+    // Mientras no haga clic, sigue en el estado de game over
+    return GAME_OVER;
+}
+
+
 
