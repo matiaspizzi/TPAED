@@ -12,10 +12,12 @@
 #define PC_PLAY     0xD5
 #define HUMAN_PLAY  6
 
-
 #define ESYM  0
 #define XSYM  1
 #define OSYM  2
+
+#define MAX_DATE_LENGTH 32
+#define MAX_FILENAME_LENGTH 100
 
 typedef struct
 {
@@ -44,7 +46,7 @@ int     pc_playing(int board[3][3], tPlays *p);
 int     check_tateti(tLista* l);
 
 int     save_score(tSession *s, int board[3][3],int res);
-
+void    save_game_report(tScore *score);
 
 
 

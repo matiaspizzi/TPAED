@@ -4,9 +4,6 @@
 #include "data.h"
 #include "TDA_Lista.h"
 
-#define MAX_DATE_LENGTH 32
-#define MAX_FILENAME_LENGTH 100
-
 
 void init_session(tSession *s)
 {
@@ -81,53 +78,6 @@ void printString(const void *data)
 {
     const char *text = (const char *)data;
     printf("%s\n", text);
-}
-
-void save_game_report(tScore *score){
-
-    time_t now = time(NULL);
-    struct tm *t = localtime(&now);
-
-    char filename[MAX_FILENAME_LENGTH];
-    snprintf(filename, sizeof(filename),
-            "informe-juego_%04d-%02d-%02d-%02d-%02d-%02d.txt",
-            t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
-            t->tm_hour, t->tm_min, t->tm_sec);
-
-    FILE *file = fopen(filename, "w");
-    if (file == NULL)
-    {
-        perror("Error al crear archivo de informe");
-        return;
-    }
-
-        fprintf(file, "INFORME DE JUEGO\n");
-        fprintf(file, "----------------\n");
-        fprintf(file, "Jugador: %s\n", score->player.name);
-        fprintf(file, "Puntos: %d\n", score->player.points);
-        fprintf(file, "Resultado: %s\n\n", score->result ? "VICTORIA" : "DERROTA");
-
-        fprintf(file, "ESTADO DEL TABLERO:\n");
-        fprintf(file, "-------------\n");
-        for (int i = 0; i < 3; i++) {
-            fprintf(file, "|");
-            for (int i = 0; i < 3; i++)
-            {
-                fprintf(file, " %c | %c | %c \n",
-                        score->board[i][0] == 1 ? 'X' : score->board[i][0] == 2 ? 'O'
-                                                                                : ' ',
-                        score->board[i][1] == 1 ? 'X' : score->board[i][1] == 2 ? 'O'
-                                                                                : ' ',
-                        score->board[i][2] == 1 ? 'X' : score->board[i][2] == 2 ? 'O'
-                                                                                : ' ');
-                if (i < 2)
-                    fprintf(file, "---+---+---\n");
-            }
-            fprintf(file, "\n-------------\n");
-        }
-
-        fclose(file);
-        printf("Informe guardado como: %s\n", filename);
 }
 
 int fifty_fifty()

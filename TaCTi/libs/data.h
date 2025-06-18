@@ -7,7 +7,6 @@
 
 #include "TDA_Lista.h"
 #include "cola.h"
-#include "game.h"
 
 #define isVALIDCHAR(c) (((c) >= 'A' && (c) <= 'Z') || ((c) >= 'a' && (c) <= 'z') || ((c) >= '0' && (c) <= '9') || (c) == ' ')
 
@@ -61,7 +60,6 @@ int list_player             (tSession *s);
 void printString            (const void *data);
 int get_player              (tPlayer *p, tSession *s);
 int fifty_fifty();
-void save_game_report       (tScore *scoreData);
 
 #endif // DATA_H_INCLUDED
 
