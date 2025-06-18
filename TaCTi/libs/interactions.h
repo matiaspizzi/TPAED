@@ -7,6 +7,6 @@ int update_menu             ();
 int update_enter_players    (tSession *s);
 int update_round            (tSession *s);
 int update_ranking          (tSession *s);
-
-
+int update_player_ready     (tSession *s);
+int update_board            (tSession *s);
 #endif // INTERACTIONS_H_INCLUDED
