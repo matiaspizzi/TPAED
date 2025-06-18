@@ -64,8 +64,10 @@ int sacarDeCola(tCola *p, void *d, unsigned cantBytes)
     return 1;
 }
 
-void vaciarCola(tCola *p)
+int vaciarCola(tCola *p)
 {
+    if(!p)
+        return 0;
     while(p->pri)
     {
         tNodo *aux = p->pri;
@@ -74,4 +76,5 @@ void vaciarCola(tCola *p)
         free(aux);
     }
     p->ult = NULL;
+    return 1;
 }

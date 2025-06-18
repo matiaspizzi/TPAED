@@ -44,10 +44,13 @@ typedef struct
     tLista  players_list;
     tCola   players_queue;
     int     qtyPlayers;
+    int     roundMixed;
 }tSession;
 
 void init_session           (tSession *s);
+int drop_session            (tSession *s);
 int  reset_input            (tInput *input);
+int set_round               (tSession *s);
 
 int list_player             (tSession *s);
 void printString        (const void *data);

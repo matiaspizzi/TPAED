@@ -56,8 +56,7 @@ int update_enter_players(tSession *s)
     //  Boton atras --> Deshace lo ingresado y vuelve al menú.
     if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        reset_input(&s->input);
-        vaciarLista(&s->players_list); ///-----< cambiar
+        drop_session(s);
         return MENU;
     }
 
@@ -86,7 +85,8 @@ int update_enter_players(tSession *s)
             reset_input(&s->input);
             s->qtyPlayers++;
             if(s->qtyPlayers == 1)
-                return BOARD;
+                return PLAYERS_READY;
+            set_round(s);
             return ROUND;
         }
         else
@@ -111,7 +111,7 @@ int update_enter_players(tSession *s)
 }
 
 
-int update_round()
+int update_round(tSession *s)
 {
     Vector2 mouse = GetMousePosition();
     //  Boton atras.

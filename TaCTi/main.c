@@ -10,7 +10,7 @@
 
 #include "libs/TDA_Lista.h"
 #include "libs/cola.h"
-
+#include <time.h>
 
 int main()
 {
@@ -22,6 +22,8 @@ int main()
 
     tSession session;
     init_session(&session);
+
+    srand(time(NULL));
 
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
@@ -53,7 +55,6 @@ int main()
             case ROUND:
             {
                 //  Se otorgan los turnos para cada jugador.
-                set_round(&session);
                 draw_round(&session);
                 currentScreen = update_round(&session);
                 break;
@@ -61,7 +62,6 @@ int main()
             case PLAYERS_READY:
             {
                 draw_player_ready(&session);
-
                 break;
             }
             case BOARD:

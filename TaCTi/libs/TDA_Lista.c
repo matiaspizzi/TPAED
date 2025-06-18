@@ -184,13 +184,75 @@ void recorrerGuardandoLista(const tLista *p, void *dato, unsigned tamDato)
 
 int verEnPosicion(tLista *l, unsigned pos, void *dato, unsigned tamDato)
 {
-    int i = 0;
-    if(!l || !dato)
+    unsigned i = 0;
+    tNodo *actual;
+
+    if (!l || !*l || !dato)
         return ERROR;
 
-    while(*l )
+    actual = *l;
+
+    while (actual && i < pos)
     {
-        memcpy
+        actual = actual->sig;
+        i++;
     }
 
+    if (actual)
+    {
+        memcpy(dato, actual->info, MIN(tamDato, actual->tamInfo));
+        return OK;
+    }
+    return ERROR;
+}
+
+
+int ordenarListaAleatorio(tLista *l)
+{
+    tNodo **nodos = NULL;
+    unsigned qty = 0, i;
+    tNodo *act = *l;
+
+    // 1. Contar nodos
+    while (act)
+    {
+        qty++;
+        act = act->sig;
+    }
+
+    if (qty < 2)
+        return OK;  // No hay nada que mezclar
+
+    // 2. Crear array de punteros
+    nodos = malloc(qty * sizeof(tNodo *));
+    if (!nodos)
+        return ERROR;  // Error de memoria
+
+    act = *l;
+    for (i = 0; i < qty; i++)
+    {
+        nodos[i] = act;
+        act = act->sig;
+    }
+
+    // 3. Barajar el array (Fisher-Yates)
+    for (i = qty - 1; i > 0; i--)
+    {
+        unsigned j = rand() % (i + 1);
+        tNodo *tmp = nodos[i];
+        nodos[i] = nodos[j];
+        nodos[j] = tmp;
+    }
+
+    // 4. Reconstruir la lista
+    *l = nodos[0];
+    for (i = 0; i < qty - 1; i++)
+    {
+        nodos[i]->sig = nodos[i + 1];
+    }
+    nodos[qty - 1]->sig = NULL;
+
+    // 5. Liberar array auxiliar
+    free(nodos);
+    return OK;
 }

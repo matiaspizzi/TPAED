@@ -169,7 +169,7 @@ void draw_ranking(tSession *s)
 
 void draw_player_ready(tSession *s)
 {
-    char buffer[MAX_BUFF_SIZE];
+    //char buffer[MAX_BUFF_SIZE];
     //sprintf(buffer, "%s estas listo?", playerName);
     //DrawText(buffer, screenWidth / 2 - MeasureText(buffer, 30) / 2, screenHeight / 2 - 50, 30, COLOR_TEXT);
     DrawRectangleRec(btnStart, COLOR_BTN);
@@ -196,13 +196,13 @@ void draw_round(tSession *s)
 
     for (i = 0; i < s->qtyPlayers; i++)
     {
-        if (verEnPosicion(&s->players_list, i, name, MAX_BUFF_SIZE))
+        if (verEnPosicion(&s->players_list,i,name,MAX_BUFF_SIZE))
         {
             sprintf(buffer, "%d - %s", i + 1, name);
             DrawText(buffer, 100, 100 + i * 35, 30, COLOR_TEXT);
         }
-    }
 
+    }
 
     DrawRectangleRec(btnBack, COLOR_BTN);
     DrawText("ATRAS",
