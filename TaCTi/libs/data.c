@@ -5,6 +5,9 @@
 #include "TDA_Lista.h"
 
 
+
+
+
 void init_session(tSession *s)
 {
     s->input.keyCount = 0;
@@ -86,9 +89,3 @@ int fifty_fifty()
     return (rand() % 2) + 1;  // Devuelve 1 o 2
 }
 
-/*int list_score(tSession *s, tScore *sc)
-{
-    if(ponerAlFinal(&s,&sc,sizeof(tScore)))
-        return ERROR;
-    return OK
-}*/

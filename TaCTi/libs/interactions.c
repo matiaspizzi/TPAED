@@ -56,7 +56,7 @@ int update_enter_players(tSession *s)
         s->input.name[s->input.keyCount] = '\0';
     }
 
-    //  Boton atras --> Deshace lo ingresado y vuelve al men�.
+    //  Boton atras --> Deshace lo ingresado y vuelve al menú.
     if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         printf("-> ATRAS\n");
@@ -64,9 +64,10 @@ int update_enter_players(tSession *s)
         return MENU;
     }
 
-    //  Boton otro jugador --> Agrega al jugador a la lista y permite seguir ingresando m�s.
+    //  Boton otro jugador --> Agrega al jugador a la lista y permite seguir ingresando más.
     if (CheckCollisionPointRec(mouse, btnNewPlayer) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
+        printf("-> OTRO_JUGADOR\n");
         if (list_player(s))
         {
             reset_input(&s->input);
@@ -79,29 +80,33 @@ int update_enter_players(tSession *s)
         }
         return ENTER_PLAYERS;
     }
+
     //  Boton comenzar --> Agrega al jugador a la lista y  procede a otorgar los turnos.
     if (CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-            if (s->input.keyCount > 0 && s->input.name[0] != '\0')
-            {
-                if (list_player(s))
-                    s->qtyPlayers++;
-                else
-                {
-                    errorTimer = 2.0f;
-                    showError = 1;
-                }
-            }
-            else if(s->qtyPlayers < 1)
+        printf("-> COMENZAR\n");
+        if (s->input.keyCount > 0 && s->input.name[0] != '\0')
+        {
+            if (list_player(s))
+                s->qtyPlayers++;
+            else
             {
                 errorTimer = 2.0f;
                 showError = 1;
-                return ENTER_PLAYERS;
             }
-            reset_input(&s->input);
-            queue_player(s);
-            return ROUND;
+        }
+        else if(s->qtyPlayers < 1)
+        {
+            errorTimer = 2.0f;
+            showError = 1;
+            return ENTER_PLAYERS;
+        }
+        reset_input(&s->input);
+        queue_player(s);    //  Con todos turnos asignados, encolamos.
+        return ROUND;
     }
+
+    //  Si se intenta ingresar un nombre menor a 3 caracteres o si no se ingreso ningun nombre da error.
     if (showError)
     {
         DrawText("Error",
@@ -118,14 +123,16 @@ int update_enter_players(tSession *s)
 int update_round(tSession *s)
 {
     Vector2 mouse = GetMousePosition();
-    //  Boton atras.
+
+    //  Boton atras --> Vuelve al ingreso de jugadores.
     if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         return ENTER_PLAYERS;
     }
+
+    //  Boton empezar --> Inicia la ronda de turnos.
     if(CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        vaciarLista(&s->players_list);
         return PLAYERS_READY;
     }
     return ROUND;
@@ -135,6 +142,7 @@ int update_ranking(tSession *s)
 {
     Vector2 mouse = GetMousePosition();
 
+    //  Boton atras --> Vuelve al menu.
     if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         return MENU;
@@ -145,20 +153,30 @@ int update_ranking(tSession *s)
 
 int update_player_ready(tSession *s, tPlays *p)
 {
-   Vector2 mouse = GetMousePosition();
+    tPlayer drop;   //  Variable basura.
 
-    if(colaVacia(&s->players_queue))
+    Vector2 mouse = GetMousePosition();
+
+    if(colaVacia(&s->players_queue))    //  Si no hay mas jugadores por jugar termina.
         return END_SAVE;
 
+    //  Boton rendirse --> Cancela la participacion del jugador.
     if (CheckCollisionPointRec(mouse, btnSurrender) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        finish_match(p);
-        if(!colaVacia(&s->players_queue))
+        sacarDeCola(&s->players_queue, &drop, sizeof(tPlayer));
+        finish_match(p);  // Asegurate de resetear el match
+        if (!colaVacia(&s->players_queue))
+        {
+            init_match(p);  // Iniciá el match del siguiente (opcional)
             return PLAYERS_READY;
+        }
         else
-            return MENU;
+        {
+            return END_SAVE;
+        }
     }
 
+    //  Boton empezar --> Comienza el juego para el jugador que le toca.
     if (CheckCollisionPointRec(mouse, btnStart) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         init_match(p);
@@ -173,7 +191,8 @@ int update_board(tSession *s, tPlays *p)
 
     int res = 0;
     int row,col;
-    // TURNO HUMANO
+
+    // Turno humano.
     if (p->curr_symbol == p->human_symbol)
     {
         for (row = 0; row < 3; row++)
@@ -211,10 +230,10 @@ int update_board(tSession *s, tPlays *p)
             }
         }
     }
-    // TURNO PC
+    //  Turno PC.
     else
     {
-        // PC juega (intenta ganar / bloquear / jugada estrat�gica)
+        // PC juega --> Intenta ganar, bloquear o jugada aleatoria.
         res = pc_playing(board,p);
         switch(res)
         {
@@ -244,6 +263,7 @@ int update_game_over(tSession *s, tPlays *p)
 {
     Vector2 mouse = GetMousePosition();
 
+    //  Boton siguiente --> Da paso al siguiente jugador en la cola.
     if (CheckCollisionPointRec(mouse, btnNext) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         printf("--> CONTINUAR\n");
@@ -251,10 +271,10 @@ int update_game_over(tSession *s, tPlays *p)
         finish_match(p);
         return PLAYERS_READY;
     }
-
     // Mientras no haga clic, sigue en el estado de game over
     return GAME_OVER;
 }
+
 
 int update_end_save(tSession *s, tPlays *p)
 {
@@ -289,11 +309,14 @@ int update_end_save(tSession *s, tPlays *p)
     }
 
     int success = post_players(players_to_send, player_count);
-    if (success==1) printf("\nScores enviados a la API");
-    else printf("\nScores enviados a la API");
+    if (success==1)
+        printf("\nScores enviados a la API");
+    else
+        printf("\nScores enviados a la API");
 
-            save_game_report_list(&s->score_list);
+    save_game_report_list(&s->score_list);
 
     vaciarLista(&s->score_list);
+    drop_session(s);
     return MENU;
 }

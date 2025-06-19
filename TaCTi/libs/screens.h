@@ -7,8 +7,9 @@
 
 #include "raylib.h"
 #include "data.h"
+#include "game.h"
 
-
+//  Colores de graficos.
 #define     COLOR_TEXT      WHITE
 #define     COLOR_BG        DARKGREEN
 #define     COLOR_BTN       DARKGRAY
@@ -32,7 +33,7 @@ typedef enum
     EXIT
 } screens;
 
-extern const char *screens_str[];
+extern const char *screens_str[];   //  Vector para nombres de pantallas.
 
 extern const int screenWidth;
 extern const int screenHeight;
@@ -45,9 +46,15 @@ void    draw_board              (tSession *s);
 void    draw_ranking            (tSession *s);
 void    draw_player_ready       (tSession *s);
 void    draw_round              (tSession *s);
-void    draw_game_over          ();
+void    draw_game_over          (tPlays *p);
+void    clear_ranking_cache     ();
+int     compare_players         (const void *a, const void *b);
+void    sort_ranking            (tPlayer *players, int count);
 
 
+
+
+//  Botones.
 extern Rectangle btnPlay;
 extern Rectangle btnRanking;
 extern Rectangle btnExit;
@@ -58,7 +65,7 @@ extern Rectangle btnNext;
 extern Rectangle btnSurrender;
 extern Rectangle txtBox;
 
-//  Tablero
+//  Tablero.
 extern Rectangle grid[3][3];
 extern Rectangle cell;
 extern int board[3][3];

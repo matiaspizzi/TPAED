@@ -27,32 +27,11 @@ Rectangle btnSurrender  =   { screenWidth/2.0f - 150, 440, 300, 50 };
 Rectangle txtBox        =   { screenWidth/2.0f - 200, 200, 400, 50 };
 Rectangle grid[3][3];
 
-
-
 static          tPlayer *cached_players = NULL;
 static int      cached_players_count = 0;
 static double   last_fetch_time = 0;
 const double    REFRESH_INTERVAL = 30.0;
 
-void clear_ranking_cache()
-{
-    if (cached_players != NULL) {
-        free(cached_players);
-        cached_players = NULL;
-    }
-    cached_players_count = 0;
-}
-
-int compare_players(const void *a, const void *b) {
-    const tPlayer *playerA = (const tPlayer *)a;
-    const tPlayer *playerB = (const tPlayer *)b;
-    return playerB->points - playerA->points;
-}
-
-void sort_ranking(tPlayer *players, int count) {
-    if (players == NULL || count <= 0) return;
-    qsort(players, count, sizeof(tPlayer), compare_players);
-}
 
 void draw_menu(void)
 {
@@ -241,7 +220,7 @@ void draw_round(tSession *s)
         20, COLOR_TEXT);
 }
 
-void draw_game_over(tScore *sc)
+void draw_game_over(tPlays *p)
 {
     const int offsetX = screenWidth / 2 - (CELL_SIZE * 3) / 2;
     const int offsetY = screenHeight / 2 - (CELL_SIZE * 3) / 2;
@@ -249,10 +228,10 @@ void draw_game_over(tScore *sc)
     int textWidth = MeasureText("X", fontSize);
     int textHeight = fontSize;
     char buffer[MAX_BUFF_SIZE];
-    if(sc->result == DRAW)
+    if(p->winner == DRAW)
         memcpy(buffer, "Empate",strlen("Empate"));
-    else if(sc->result == HUMAN_WIN)
-        sprintf(buffer,"Gano: %s",sc->player.name);
+    else if(p->winner == HUMAN_WIN)
+        sprintf(buffer,"Gano el jugador");
     else
         memcpy(buffer, "Gano PC",strlen("Gano PC"));
 
@@ -288,4 +267,24 @@ void draw_game_over(tScore *sc)
              20, COLOR_TEXT);
 }
 
+void clear_ranking_cache()
+{
+    if (cached_players != NULL) {
+        free(cached_players);
+        cached_players = NULL;
+    }
+    cached_players_count = 0;
+}
 
+int compare_players(const void *a, const void *b)
+{
+    const tPlayer *playerA = (const tPlayer *)a;
+    const tPlayer *playerB = (const tPlayer *)b;
+    return playerB->points - playerA->points;
+}
+
+void sort_ranking(tPlayer *players, int count)
+{
+    if (players == NULL || count <= 0) return;
+    qsort(players, count, sizeof(tPlayer), compare_players);
+}

@@ -52,19 +52,14 @@ typedef struct
 
 
 
-void    init_session           (tSession *s);
-void    drop_session           (tSession *s);
-
-int     reset_input            (tInput *input);
-
+void    init_session            (tSession *s);
+void    drop_session            (tSession *s);
+int     reset_input             (tInput *input);
 int     list_player             (tSession *s);
 int     queue_player            (tSession *s);
-
 int     get_player              (tPlayer *p, tSession *s);
-
-void    printString            (const void *data);
+void    printString             (const void *data);
 int     fifty_fifty             ();
-
 
 
 #endif // DATA_H_INCLUDED

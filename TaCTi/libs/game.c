@@ -275,7 +275,7 @@ int list_score(tSession *s, tPlays *p)
     }
     else
     {
-        score.player.points += 0;  // Derrota
+        score.player.points -= 1;  // Derrota
     }
 
     // Copia el tablero final
