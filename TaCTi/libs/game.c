@@ -1,6 +1,6 @@
-#include <stdlib.h>  // rand, srand
-#include <time.h>    // time
-#include <math.h>  // Para pow
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
 #include <stdio.h>
 #include "game.h"
 #include "screens.h"
@@ -22,12 +22,12 @@ void init_match(tPlays *p)
 
     if (fifty_fifty() == 1)
     {
-        printf("Arranca PC\n");
+        printf("Arranca la PC\n");
         p->curr_symbol = p->pc_symbol;
     }
     else
     {
-        printf("Arranca Humano\n");
+        printf("Arranca el jugador\n");
         p->curr_symbol = p->human_symbol;
     }
 }
@@ -35,15 +35,11 @@ void init_match(tPlays *p)
 int human_playing(int board[3][3], tPlays *p, int i, int j)
 {
     int valor;
-    /*if (full_board(board))
-    {
-        return DRAW;     // Empate, no quedan más movimientos.
-    }*/
 
-    // Validar que la casilla esté libre
+    // Validar que la casilla este libre
     if (i < 0 || i > 2 || j < 0 || j > 2 || board[i][j] != 0)
     {
-        // Movimiento inválido
+        // Movimiento invalido
         return HUMAN_PLAY;
     }
 
@@ -57,26 +53,27 @@ int human_playing(int board[3][3], tPlays *p, int i, int j)
         // Humano gana
         return HUMAN_WIN;
     }
-    //return pc_playing(int board[3][3], tPlays *p);
-    // Continúa el juego, turno PC
+
+    //  Turno PC
     return PC_PLAY;
 }
-
 
 int pc_playing(int board[3][3], tPlays *p)
 {
     int sacarHumano;
     int row,col;
-    // 1. Intentar ganar
+    //  Intentar ganar
     if (traverse_tateti(board, &p->pc,&row,&col))
     {
         board[row][col] = p->pc_symbol;
+        printf("--> PC: [%d][%d]\n", row,col);
         return PC_WIN;
     }
     else if (traverse_tateti(board, &p->human, &row, &col))
     {
-        // 2. Intentar bloquear al humano
+        //  Intentar bloquear al humano
         board[row][col] = p->pc_symbol;
+        printf("--> PC: [%d][%d]\n", row,col);
         sacarAlFinal(&p->human,&sacarHumano,sizeof(int));
         ponerAlFinal(&p->pc, &sacarHumano, sizeof(int));
     }
@@ -86,7 +83,8 @@ int pc_playing(int board[3][3], tPlays *p)
         {
             if(check_tateti(&p->pc))
                 return PC_WIN;
-            return DRAW;
+            if (full_board(board))
+                return DRAW;
         }
 
     }
@@ -141,10 +139,10 @@ int full_board(int board[3][3])
         for (int j = 0; j < 3; j++)
         {
             if (board[i][j] == 0)
-                return 0;  // Todavía hay al menos un lugar libre
+                return ERROR;  //   Hay al menos un lugar libre
         }
     }
-    return 1;  // No hay lugares libres → matriz completa
+    return OK;  // No hay lugares libres
 }
 
 int randomPosition(int  board[3][3], tLista* p_pc, int symbol)
@@ -153,9 +151,9 @@ int randomPosition(int  board[3][3], tLista* p_pc, int symbol)
     int a = 0;
     int ai = 0;
     int aj = 0;
-    /// a = Se fija si hubo algún '0'
+    // a = Se fija si hubo algún '0'
 
-    /// ai y aj son las filas y columnas del '0' seleccionado.
+    // ai y aj son las filas y columnas del '0' seleccionado.
 
     for (int i = 0; i < 3; i++)
     {
@@ -169,7 +167,7 @@ int randomPosition(int  board[3][3], tLista* p_pc, int symbol)
                     ai = i;
                     aj = j;
                 }
-                /// Elige aleatoriamente si, un elemento que es '0', pasa a ser el nuevo seleccionado.
+                // Elige aleatoriamente si, un elemento que es '0', pasa a ser el nuevo seleccionado.
                 if ( rand() % 2 == 0)
                 {
                     ai = i;
@@ -180,10 +178,10 @@ int randomPosition(int  board[3][3], tLista* p_pc, int symbol)
     }
     if ( a != 0)
     {
-        /// El último seleccionado pasa a ser un '2' (PC)
+        // El último seleccionado pasa a ser un '2' (PC)
         board[ai][aj] = symbol;
-
-        /// Incluye el valor en la Lista PC.
+        printf("--> PC: [%d][%d]\n", ai,aj);
+        // Incluye el valor en la Lista PC.
         valor = (ai + 1)* ( pow(10, aj));
         ponerAlFinal(p_pc,(void*)&valor, sizeof(int));
 
@@ -194,11 +192,9 @@ int randomPosition(int  board[3][3], tLista* p_pc, int symbol)
 
         return 1;
     }
-    /// Retorna 0 (Es decir, NO pudo elegir aleatorio (matriz llena) y es EMPATE
+    // Retorna 0 (Es decir, NO pudo elegir aleatorio (matriz llena) y es EMPATE
     return 0;
 }
-
-
 
 int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
 {
@@ -224,25 +220,6 @@ int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
         }
 
     }
-    return 0;
-}
-
-
-
-int check_tateti_board(int board[3][3], int jugador)
-{
-    for (int i = 0; i < 3; i++)
-    {
-        if (board[i][0] == jugador && board[i][1] == jugador && board[i][2] == jugador)
-            return 1;
-        if (board[0][i] == jugador && board[1][i] == jugador && board[2][i] == jugador)
-            return 1;
-    }
-    if (board[0][0] == jugador && board[1][1] == jugador && board[2][2] == jugador)
-        return 1;
-    if (board[0][2] == jugador && board[1][1] == jugador && board[2][0] == jugador)
-        return 1;
-
     return 0;
 }
 
@@ -286,7 +263,6 @@ int list_score(tSession *s, tPlays *p)
     // Copia el tablero final
     memcpy(score.board, board, sizeof(score.board));
 
-    // Guarda el resultado
     score.result = p->winner;
 
     if (!ponerAlFinal(&s->score_list, &score, sizeof(tScore)))
@@ -294,7 +270,6 @@ int list_score(tSession *s, tPlays *p)
 
     return OK;
 }
-
 
 void save_game_report_list(tLista *score_list)
 {
@@ -371,4 +346,29 @@ void save_game_report_list(tLista *score_list)
     fclose(file);
     printf("Informe guardado como: %s\n", filename);
 }
+
+
+/*
+
+int check_tateti_board(int board[3][3], int jugador)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (board[i][0] == jugador && board[i][1] == jugador && board[i][2] == jugador)
+            return 1;
+        if (board[0][i] == jugador && board[1][i] == jugador && board[2][i] == jugador)
+            return 1;
+    }
+    if (board[0][0] == jugador && board[1][1] == jugador && board[2][2] == jugador)
+        return 1;
+    if (board[0][2] == jugador && board[1][1] == jugador && board[2][0] == jugador)
+        return 1;
+
+    return 0;
+}
+
+//      Esta función permite chequear el ta te ti mucho mas eficientemente ya que se accede directo a la matriz.
+//      Pero se decidio utilizar el método de los magic numbers para aplicar conceptos de lista y buscar una alternativa
+//      a los IFs masivos para la IA.
+*/
 

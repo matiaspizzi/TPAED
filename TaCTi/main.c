@@ -7,7 +7,7 @@
 int main()
 {
     InitWindow(screenWidth, screenHeight, "TaCTi");
-    SetTargetFPS(30);
+    SetTargetFPS(30);       //  Minimo 20 FPS, menos no. 30 cumple.
 
     screens currentScreen = MENU;
     screens prevScreen = MENU;

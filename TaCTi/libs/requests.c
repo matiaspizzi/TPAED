@@ -3,7 +3,6 @@
 #define API_URL "https://algoritmos-api.azurewebsites.net/api/TaCTi"
 #define GROUP_CODE "funcion"
 #define MAX_PLAYERS 100
-#define MAX_DATE_LENGTH 32
 #define CURL_TIMEOUT 10
 
 char *escape_quotes(const char *input)

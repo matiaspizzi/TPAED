@@ -2,11 +2,6 @@
 #include <string.h>
 
 #include "data.h"
-#include "TDA_Lista.h"
-
-
-
-
 
 void init_session(tSession *s)
 {
@@ -14,7 +9,6 @@ void init_session(tSession *s)
     s->input.name[0] = '\0';
     crearLista(&s->players_list);
     crearCola(&s->players_queue);
-    //crearLista(&s->score_list)
     s->qtyPlayers = 0;
 }
 
@@ -23,6 +17,7 @@ void drop_session(tSession *s)
     s->input.keyCount = 0;
     s->input.name[0] = '\0';
     vaciarLista(&s->players_list);
+    vaciarLista(&s->score_list);
     vaciarCola(&s->players_queue);
     s->qtyPlayers = 0;
 }
@@ -41,14 +36,16 @@ int list_player(tSession *s)
     strcpy(name, s->input.name);
 
     if(strlen(name) < 3 || strcmp(name,"  ") == 0)
+    {
         return ERROR;
+    }
     if (!ponerAlFinal(&s->players_list, &name, MAX_BUFF_SIZE))
     {
-        printf("Error al enlistar.\n");
-        return 0;
+
+        return ERROR;
     }
-    printf("%s enlistado.\n",name);
-    return 1;
+    printf("--------->%s\n",name);
+    return OK;
 }
 
 int queue_player(tSession *s)
@@ -88,4 +85,5 @@ int fifty_fifty()
 {
     return (rand() % 2) + 1;  // Devuelve 1 o 2
 }
+
 

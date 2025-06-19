@@ -46,9 +46,7 @@ int     make_row            (int magicNum, int* vecAnswers);
 int     randomPosition      (int board[3][3], tLista* p_pc, int symbol);
 int     pc_playing          (int board[3][3], tPlays *p);
 int     check_tateti        (tLista* l);
-
 int     list_score          (tSession *s, tPlays *p);
-
 void    save_game_report_list(tLista *score_list);
 
 
