@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include "raylib.h"
+#include "TDA_Lista.h"
 #include "screens.h"
 #include "interactions.h"
 #include "data.h"
 #include "game.h"
+#include "requests.h"
 
 float errorTimer;
 int showError = 0;
@@ -54,7 +56,7 @@ int update_enter_players(tSession *s)
         s->input.name[s->input.keyCount] = '\0';
     }
 
-    //  Boton atras --> Deshace lo ingresado y vuelve al menú.
+    //  Boton atras --> Deshace lo ingresado y vuelve al menï¿½.
     if (CheckCollisionPointRec(mouse, btnBack) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         printf("-> ATRAS\n");
@@ -62,7 +64,7 @@ int update_enter_players(tSession *s)
         return MENU;
     }
 
-    //  Boton otro jugador --> Agrega al jugador a la lista y permite seguir ingresando más.
+    //  Boton otro jugador --> Agrega al jugador a la lista y permite seguir ingresando mï¿½s.
     if (CheckCollisionPointRec(mouse, btnNewPlayer) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         if (list_player(s))
@@ -212,7 +214,7 @@ int update_board(tSession *s, tPlays *p)
     // TURNO PC
     else
     {
-        // PC juega (intenta ganar / bloquear / jugada estratégica)
+        // PC juega (intenta ganar / bloquear / jugada estratï¿½gica)
         res = pc_playing(board,p);
         switch(res)
         {
@@ -256,12 +258,42 @@ int update_game_over(tSession *s, tPlays *p)
 
 int update_end_save(tSession *s, tPlays *p)
 {
-    save_game_report_list(&s->score_list);
 
-    vaciarLista(&s->score_list);  // Si querés vaciar después de guardar
+    int player_count = 0;
+    tNodo *current = s->score_list;
 
+    while (current != NULL) {
+        player_count++;
+        current = current->sig;
+    }
+
+    if (player_count == 0) {
+        vaciarLista(&s->score_list);
+        return MENU;
+    }
+
+    tPlayer *players_to_send = (tPlayer*)malloc(player_count * sizeof(tPlayer));
+    if (players_to_send == NULL) {
+        fprintf(stderr, "Error de memoria\n");
+        vaciarLista(&s->score_list);
+        return MENU;
+    }
+
+    current = s->score_list;
+    int index = 0;
+    while (current != NULL && index < player_count) {
+        tScore *score = (tScore*)current->info;
+        players_to_send[index] = score->player;
+        index++;
+        current = current->sig;
+    }
+
+    int success = post_players(players_to_send, player_count);
+    if (success==1) printf("\nScores enviados a la API");
+    else printf("\nScores enviados a la API");
+
+            save_game_report_list(&s->score_list);
+
+    vaciarLista(&s->score_list);
     return MENU;
 }
-
-
-
