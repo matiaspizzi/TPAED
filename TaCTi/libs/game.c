@@ -83,7 +83,12 @@ int pc_playing(int board[3][3], tPlays *p)
     else
     {
         if(randomPosition(board, &p->pc, p->pc_symbol) == 0)
+        {
+            if(check_tateti(&p->pc))
+                return PC_WIN;
             return DRAW;
+        }
+
     }
     return HUMAN_PLAY;
 }
