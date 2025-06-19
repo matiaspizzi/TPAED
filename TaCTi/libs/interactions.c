@@ -310,9 +310,9 @@ int update_end_save(tSession *s, tPlays *p)
 
     int success = post_players(players_to_send, player_count);
     if (success==1)
-        printf("\nScores enviados a la API");
+        printf("Scores enviados a la API\n");
     else
-        printf("\nScores enviados a la API");
+        printf("Error al enviar los scores a la API\n");
 
     save_game_report_list(&s->score_list);
 
