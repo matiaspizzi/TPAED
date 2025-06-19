@@ -86,4 +86,21 @@ int fifty_fifty()
     return (rand() % 2) + 1;  // Devuelve 1 o 2
 }
 
+int find_or_add_player(tPlayerSummary *summaries, int *count, const char *name, int points)
+{
+    for (int i = 0; i < *count; i++)
+    {
+        if (strcmp(summaries[i].name, name) == 0)
+        {
+            summaries[i].total_points += points;
+            return i;
+        }
+    }
+
+    // Si no existe, lo agrego
+    strcpy(summaries[*count].name, name);
+    summaries[*count].total_points = points;
+    (*count)++;
+    return *count - 1;
+}
 

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "raylib.h"
-#include "TDA_Lista.h"
+#include "lista.h"
 #include "screens.h"
 #include "interactions.h"
 #include "data.h"

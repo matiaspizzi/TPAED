@@ -5,7 +5,7 @@
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
 
-#include "TDA_Lista.h"
+#include "lista.h"
 #include "cola.h"
 
 
@@ -50,6 +50,12 @@ typedef struct
     int     qtyPlayers;
 }tSession;
 
+typedef struct          //  Es para acumular los puntos de un mismo jugador.
+{
+    char name[MAX_PLAYER_NAME];
+    int total_points;
+} tPlayerSummary;
+
 
 
 void    init_session            (tSession *s);
@@ -60,7 +66,7 @@ int     queue_player            (tSession *s);
 int     get_player              (tPlayer *p, tSession *s);
 void    printString             (const void *data);
 int     fifty_fifty             ();
-
+int     find_or_add_player      (tPlayerSummary *summaries, int *count, const char *name, int points);
 
 #endif // DATA_H_INCLUDED
 

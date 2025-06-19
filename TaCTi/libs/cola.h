@@ -4,8 +4,13 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "TDA_Lista.h"
 
+typedef struct sNodo
+{
+    void           *info;
+    unsigned        tamInfo;
+    struct sNodo   *sig;
+} tNodo;
 
 typedef struct
 {

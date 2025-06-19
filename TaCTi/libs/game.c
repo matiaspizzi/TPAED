@@ -74,7 +74,7 @@ int pc_playing(int board[3][3], tPlays *p)
         //  Intentar bloquear al humano
         board[row][col] = p->pc_symbol;
         printf("--> PC: [%d][%d]\n", row,col);
-        sacarAlFinal(&p->human,&sacarHumano,sizeof(int));
+        sacarUltimoLista(&p->human,&sacarHumano,sizeof(int));
         ponerAlFinal(&p->pc, &sacarHumano, sizeof(int));
     }
     else
@@ -215,7 +215,7 @@ int traverse_tateti(int board[3][3], tLista *p, int *row, int *col)
                     *col = j;
                     return 1;
                 }
-                sacarAlFinal(p,&drop,sizeof(int));
+                sacarUltimoLista(p,&drop,sizeof(int));
             }
         }
 
@@ -273,20 +273,26 @@ int list_score(tSession *s, tPlays *p)
 
 void save_game_report_list(tLista *score_list)
 {
+    int col, fila;
+    time_t now;
+    char filename[MAX_FILENAME_LENGTH];
+
+    const char *resultadoStr;
+    char simbolo;
+    tScore *score;
+
     if (score_list == NULL || *score_list == NULL)
     {
         printf("La lista de puntajes está vacía.\n");
         return;
     }
 
-    time_t now = time(NULL);
+    now = time(NULL);
     struct tm *t = localtime(&now);
-
-    char filename[MAX_FILENAME_LENGTH];
     snprintf(filename, sizeof(filename),
-            "informe-juego_%04d-%02d-%02d-%02d-%02d-%02d.txt",
-            t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
-            t->tm_hour, t->tm_min, t->tm_sec);
+             "informe-juego_%04d-%02d-%02d-%02d-%02d-%02d.txt",
+             t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+             t->tm_hour, t->tm_min, t->tm_sec);
 
     FILE *file = fopen(filename, "w");
     if (file == NULL)
@@ -299,15 +305,17 @@ void save_game_report_list(tLista *score_list)
     fprintf(file, "--------------------------\n\n");
 
     tNodo *actual = *score_list;
+    tPlayerSummary summaries[100];  // suponemos como máximo 100 jugadores distintos
+    int summary_count = 0;
+    int max_points = 0;
 
     while (actual != NULL)
     {
-        tScore *score = (tScore *)actual->info;
+        score = (tScore *)actual->info;
 
         fprintf(file, "Jugador: %s\n", score->player.name);
-        fprintf(file, "Puntos: %d\n", score->player.points);
+        fprintf(file, "Puntos de la partida: %d\n", score->player.points);
 
-        const char *resultadoStr;
         if (score->result == HUMAN_WIN)
             resultadoStr = "VICTORIA";
         else if (score->result == PC_WIN)
@@ -319,12 +327,11 @@ void save_game_report_list(tLista *score_list)
         fprintf(file, "ESTADO DEL TABLERO:\n");
         fprintf(file, "-------------\n");
 
-        for (int fila = 0; fila < 3; fila++)
+        for (fila = 0; fila < 3; fila++)
         {
             fprintf(file, "|");
-            for (int col = 0; col < 3; col++)
+            for (col = 0; col < 3; col++)
             {
-                char simbolo;
                 if (score->board[fila][col] == XSYM)
                     simbolo = 'X';
                 else if (score->board[fila][col] == OSYM)
@@ -340,7 +347,35 @@ void save_game_report_list(tLista *score_list)
         }
         fprintf(file, "-------------\n\n");
 
+        find_or_add_player(summaries, &summary_count, score->player.name, score->player.points);
+
         actual = actual->sig;
+    }
+
+    // Determinar puntaje máximo
+    for (int i = 0; i < summary_count; i++)
+    {
+        if (summaries[i].total_points > max_points)
+            max_points = summaries[i].total_points;
+    }
+
+    // Mostrar ranking
+    fprintf(file, "RANKING LOCAL:\n");
+    fprintf(file, "--------------\n");
+    for (int i = 0; i < summary_count; i++)
+    {
+        fprintf(file, "%s : %d puntos\n", summaries[i].name, summaries[i].total_points);
+    }
+
+    // Mostrar el/los con mayor puntaje
+    fprintf(file, "\nJUGADOR(ES) CON MAYOR PUNTAJE:\n");
+    fprintf(file, "------------------------------\n");
+    for (int i = 0; i < summary_count; i++)
+    {
+        if (summaries[i].total_points == max_points)
+        {
+            fprintf(file, "%s con %d puntos\n", summaries[i].name, summaries[i].total_points);
+        }
     }
 
     fclose(file);
