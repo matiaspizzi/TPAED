@@ -172,6 +172,12 @@ int update_ranking(tSession *s)
         printf("--> ATRAS\n");
         return MENU;
     }
+    if (CheckCollisionPointRec(mouse, btnRstRank) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        printf("--> DELETE\n");
+        delete_all_players();
+        return MENU;
+    }
 
     return RANKING;
 }

@@ -64,6 +64,7 @@ extern Rectangle btnBack;
 extern Rectangle btnNext;
 extern Rectangle btnSurrender;
 extern Rectangle txtBox;
+extern Rectangle btnRstRank;
 
 //  Tablero.
 extern Rectangle grid[3][3];

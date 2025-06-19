@@ -21,7 +21,8 @@ Rectangle btnRanking    =   { screenWidth/2.0f - 150, 280, 300, 50 };
 Rectangle btnExit       =   { screenWidth/2.0f - 150, 360, 300, 50 };
 Rectangle btnNewPlayer  =   { screenWidth/2.0f - 150, 280, 300, 50 };
 Rectangle btnStart      =   { screenWidth/2.0f - 150, 360, 300, 50 };
-Rectangle btnBack       =   { screenWidth/2.0f - 150, 440, 300, 50 };
+Rectangle btnBack       =   { screenWidth/2.0f - 150, 460, 300, 50 };
+Rectangle btnRstRank    =   { screenWidth/2.0f - 150, 520, 300, 50 };
 Rectangle btnNext       =   { screenWidth/2.0f - 150, 440, 300, 50 };
 Rectangle btnSurrender  =   { screenWidth/2.0f - 150, 440, 300, 50 };
 Rectangle txtBox        =   { screenWidth/2.0f - 200, 200, 400, 50 };
@@ -131,9 +132,9 @@ void draw_ranking(tSession *s)
 
     DrawText("Ranking", screenWidth/2 - MeasureText("Ranking", 30)/2, 50, 30, COLOR_TEXT);
 
-    // Solo hace la petición si:
+    // Solo hace la peticion si:
     // - No hay datos en caché O
-    // - Pasó el intervalo de refresco
+    // - Paso el intervalo de refresco
     if (cached_players == NULL || (current_time - last_fetch_time) > REFRESH_INTERVAL) {
         if (cached_players != NULL) {
             free(cached_players);
@@ -163,6 +164,12 @@ void draw_ranking(tSession *s)
     DrawText("ATRAS",
         btnBack.x + (btnBack.width - MeasureText("ATRAS", 20))/2,
         btnBack.y + (btnBack.height - 20)/2,
+        20, COLOR_TEXT);
+
+    DrawRectangleRec(btnRstRank, COLOR_BTN);
+    DrawText("RESET",
+        btnRstRank.x + (btnRstRank.width - MeasureText("RESET", 20))/2,
+        btnRstRank.y + (btnRstRank.height - 20)/2,
         20, COLOR_TEXT);
 }
 
