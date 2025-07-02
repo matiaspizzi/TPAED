@@ -1,0 +1,21 @@
+INFORME DE JUEGO (MULTIPLE)
+--------------------------
+
+Jugador: Elian
+Puntos de la partida: -1
+Resultado: DERROTA
+ESTADO DEL TABLERO:
+-------------
+| X | O | X |
+---+---+---
+|   | O |   |
+---+---+---
+| X | O | O |
+-------------
+
+RANKING LOCAL:
+--------------
+Elian : -1 puntos
+
+JUGADOR(ES) CON MAYOR PUNTAJE:
+------------------------------

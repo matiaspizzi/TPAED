@@ -20,6 +20,6 @@ int     execute_curl            (const char *curl_command, char *response, size_
 char    *build_post_json        (const tPlayer *players, int player_count);
 int     post_players            (const tPlayer *players, int player_count);
 int     delete_all_players      ();
-
+int     load_config();
 #endif
 

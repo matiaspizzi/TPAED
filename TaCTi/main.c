@@ -3,6 +3,7 @@
 #include "libs/screens.h"
 #include "libs/interactions.h"
 #include "libs/data.h"
+#include "libs/requests.h"
 
 int main()
 {
@@ -16,6 +17,10 @@ int main()
     init_session(&session);
 
     tPlays plays;
+
+     if (!load_config()) {
+        return 1;
+    }
 
     while (!WindowShouldClose() && currentScreen != EXIT)
     {
